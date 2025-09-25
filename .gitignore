@@ -208,3 +208,5 @@ gradle-app.setting
 /dist/
 /nbdist/
 /.nb-gradle/
+
+application-local.properties
