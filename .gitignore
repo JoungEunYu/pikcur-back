@@ -209,4 +209,4 @@ gradle-app.setting
 /nbdist/
 /.nb-gradle/
 
-application-local.properties
+application-db.properties
