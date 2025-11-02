@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoodsLike {
-    private Integer goodsLikeId;
-    private Integer memberNo;
-    private Integer goodsId;
+public class Faq {
+    private Integer fqaId;
+    private String title;
+    private String content;
 }
