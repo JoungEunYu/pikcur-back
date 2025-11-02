@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoodsLike {
-    private Integer goodsLikeId;
+public class GoodsHistory {
+    private Integer goodsHistoryId;
     private Integer memberNo;
     private Integer goodsId;
+    private LocalDateTime createDate;
 }
