@@ -3,6 +3,7 @@ package com.pikcurchu.pikcur.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +15,5 @@ public class Review {
     private Integer goodsId;
     private Integer starRate;
     private String content;
-    private java.sql.Timestamp createDate;
+    private LocalDateTime createDate;
 }
