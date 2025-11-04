@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.pikcur.mapper")
+@MapperScan("com.pikcurchu.pikcur.mapper")
 public class PikcurApplication {
 
 	public static void main(String[] args) {
