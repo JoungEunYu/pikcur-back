@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pikcurchu.pikcur.mapper.StoreMapper">
+
+    <select id="findStoreDetailById" resultType="com.pikcurchu.pikcur.dto.response.ResStoreDto">
+        SELECT
+        s.store_id        AS storeId,
+        s.profile,
+        s.store_name      AS storeName,
+        s.store_info      AS storeInfo,
+
+        IFNULL(AVG(r.rating), 0.0) AS rating,
+
+        COUNT(DISTINCT r.review_id) AS reviewCount,
+
+        COUNT(DISTINCT f_all.follow_id) AS followerCount,
+
+        CASE
+        WHEN f_user.follow_id IS NOT NULL THEN true
+        ELSE false
+        END AS isFollow
+
+        FROM
+        store s
+
+        LEFT JOIN
+        review r ON s.store_id = r.store_id
+
+        LEFT JOIN
+        follow f_all ON s.store_id = f_all.store_id
+
+        LEFT JOIN
+        follow f_user ON s.store_id = f_user.store_id
+        AND f_user.member_no = #{currentMemberNo}
+
+        WHERE
+        s.store_id = #{storeId}
+
+        GROUP BY
+        s.store_id
+    </select>
+
+</mapper>
