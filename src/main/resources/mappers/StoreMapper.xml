@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!--  상태 값 조건 추가 해야함  -->
+<!--  현재 상점아이디 기준으로 조회, 로그인되어있을 시 회원번호 조회로 수정가능성 있음  -->
 <mapper namespace="com.pikcurchu.pikcur.mapper.StoreMapper">
-
-    <select id="findStoreDetailById" resultType="com.pikcurchu.pikcur.dto.response.ResStoreDto">
+    <select id="findStoreInfoById" resultType="com.pikcurchu.pikcur.dto.response.ResStoreDetailDto">
         SELECT
-        s.store_id        AS storeId,
+        s.store_id,
         s.profile,
-        s.store_name      AS storeName,
-        s.store_info      AS storeInfo,
-
+        s.store_name,
+        s.store_info,
         IFNULL(AVG(r.rating), 0.0) AS rating,
-
         COUNT(DISTINCT r.review_id) AS reviewCount,
-
         COUNT(DISTINCT f_all.follow_id) AS followerCount,
 
         CASE
@@ -40,5 +38,179 @@
         GROUP BY
         s.store_id
     </select>
+    <select id="findStoreReviewById" resultType="com.pikcurchu.pikcur.dto.response.ResReviewItemDto">
+        SELECT
+        m.name as memberName,
+        r.rating,
+        r.content,
+        r.create_date,
+        GROUP_CONCAT(RC.content SEPARATOR ',') AS reviewChoices
+        from review r
+        join
+            member m on r.member_no = m.member_no
+        left join
+            review_choice_map rm on r.review_id = rm.review_id
+        left join
+            review_choice rc on rc.review_choice_id = rm.review_choice_id
+        where store_id = #{storeId}
+        group by r.review_id
+        order by r.create_date;
 
+    </select>
+    <select id="findStoreGoodsById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodesListDto">
+        SELECT
+        g.goods_id,
+        g.category_id,
+        g.brand_id,
+        g.goods_name,
+        g.buyout_price,
+        g.start_price,
+        g.auction_end_date,
+        g.create_date,
+        COUNT(b.goods_id) as bidCount,
+        case
+        when gl.goods_like_id is not null then true
+        else false
+        end as isLike,
+        sm.status_name
+        from goods g
+        left join
+        bid b on g.goods_id = b.goods_id
+        left join
+        goods_like gl on gl.goods_id = g.goods_id
+        and gl.member_no = #{currentMemberNo}
+        left join
+        Status_master sm ON g.status_no = sm.status_no AND g.status_type = sm.status_type
+        where g.store_id = #{storeId}
+        GROUP BY
+        g.goods_id,
+        g.category_id,
+        g.brand_id,
+        g.goods_name,
+        g.buyout_price,
+        g.start_price,
+        g.auction_end_date,
+        g.create_date,
+        sm.status_name;
+    </select>
+    <select id="findStoreSellTranactionById" resultType="com.pikcurchu.pikcur.dto.response.ResTransactionItemDto">
+        SELECT
+        t.transaction_id,
+        t.goods_id,
+        g.goods_name,
+        t.buyer_no,
+        t.start_date,
+        t.end_date,
+        sm.status_name
+        FROM
+        Transactions t
+        JOIN
+        Goods g ON t.goods_id = g.goods_id
+        join
+        Status_master sm ON t.status_no = sm.status_no AND t.status_type = sm.status_type
+        WHERE
+        t.seller_no = #{memberNo}
+        ORDER BY
+        t.start_date DESC;
+    </select>
+    <select id="findStoreBuyTranactionById" resultType="com.pikcurchu.pikcur.dto.response.ResTransactionItemDto">
+        SELECT
+        t.transaction_id,
+        t.goods_id,
+        g.goods_name,
+        t.buyer_no,
+        t.start_date,
+        t.end_date,
+        sm.status_name
+        FROM
+        Transactions t
+        JOIN
+        Goods g ON t.goods_id = g.goods_id
+        join
+        Status_master sm ON t.status_no = sm.status_no AND t.status_type = sm.status_type
+        WHERE
+        t.buyer_no = #{memberNo}
+        ORDER BY
+        t.start_date DESC;
+    </select>
+    <select id="findBidById" resultType="com.pikcurchu.pikcur.dto.response.ResBidListDto">
+        select
+        b.bid_id,
+        g.goods_name,
+        b.bid_price,
+        sm.status_name,
+        b.create_date
+        from bid b
+        join
+        goods g ON g.goods_id = b.goods_id
+        join
+        status_master sm ON sm.status_type = b.status_type
+        AND sm.status_no = b.status_no
+        join
+        store s ON s.member_no = b.member_no
+        where
+        b.member_no = #{memberNo}
+        order by b.create_date desc;
+    </select>
+    <select id="findGoodsLikeById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodesListDto">
+        SELECT
+            g.goods_id,
+            g.category_id,
+            g.brand_id,
+            g.goods_name,
+            g.buyout_price,
+            g.start_price,
+            g.auction_end_date,
+            g.create_date,
+            COUNT(b.goods_id) as bidCount,
+            case
+            when gl.goods_like_id is not null then true
+            else false
+            end as isLike,
+            sm.status_name
+        from goods_like gl
+        join
+        goods g on g.goods_id = gl.goods_id and gl.member_no = #{memberNo}
+        join
+        bid b on g.goods_id = b.goods_id
+        join
+        Status_master sm ON g.status_no = sm.status_no AND g.status_type = sm.status_type
+        GROUP BY
+        g.goods_id,
+        g.category_id,
+        g.brand_id,
+        g.goods_name,
+        g.buyout_price,
+        g.start_price,
+        g.auction_end_date,
+        g.create_date,
+        sm.status_name;
+    </select>
+    <select id="findBrandLikeById" resultType="com.pikcurchu.pikcur.dto.response.ResBrandItemDto">
+        select
+        b.brand_id,
+        b.brand_name,
+        b.brand_profile,
+        case
+        when bl.brand_like_id is not null then true
+        else false
+        end as isLike
+        from brand b
+        join
+        brand_like bl ON bl.brand_id = b.brand_id
+        where bl.member_no = #{memberNo};
+    </select>
+    <select id="findFollowById" resultType="com.pikcurchu.pikcur.dto.response.ResFollowItemDto">
+        select
+        s.store_id,
+        s.profile,
+        s.store_name,
+        case
+        when f.follow_id is not null then true
+        else false
+        end as isFollow
+        from store s
+        join follow f ON f.store_id = s.store_id
+        where f.member_no = #{memberNo};
+    </select>
 </mapper>

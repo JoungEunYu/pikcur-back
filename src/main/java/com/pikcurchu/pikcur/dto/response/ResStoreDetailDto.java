@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResStoreDto {
+public class ResStoreDetailDto {
     private Integer storeId;
     private String profile;
     private String storeName;
