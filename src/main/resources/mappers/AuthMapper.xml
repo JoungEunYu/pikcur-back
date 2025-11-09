@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pikcurchu.pikcur.mapper.AuthMapper">
+
+    <select id="authById" resultType="com.pikcurchu.pikcur.vo.Member">
+        select
+        member_no as memberNo,
+        id,
+        name,
+        authority,
+        password
+        from
+        member
+        where
+        id = #{id}
+    </select>
+
+    <insert id="insertMember" parameterType="com.pikcurchu.pikcur.vo.Member">
+        INSERT INTO member (
+        id,
+        password,
+        name,
+        email,
+        phone,
+        birth,
+        gender,
+        authority,
+        status_type,
+        status_no,
+        login_date,
+        create_date,
+        update_date,
+        account,
+        bank,
+        block_list
+        )
+        VALUES (
+        #{id},
+        #{password},
+        #{name},
+        #{email},
+        #{phone},
+        #{birth},
+        #{gender},
+        'MEM',
+        'MEM',
+        '01',
+        null,
+        NOW(),
+        null,
+        null,
+        null,
+        null
+        )
+    </insert>
+
+    <select id="countByEmail" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM member WHERE email = #{email}
+    </select>
+</mapper>
