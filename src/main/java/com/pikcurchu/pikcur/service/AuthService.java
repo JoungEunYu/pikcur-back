@@ -20,21 +20,18 @@ public class AuthService {
 
         Member member = authMapper.authById(id);
 
+        String statusNo = authMapper.findStatusNo(id);
+        if(!"01".equals(statusNo)) {
+            return null;
+        }
+
         if (member != null && PasswordUtil.matches(password, member.getPassword())) {
             return member;
         }
         return null;
     }
 
-    public boolean selectEmail(String email) {
-        return authMapper.countByEmail(email) > 0;
-    }
-
     public int insertMember(String id, String password, String email, String name, String phone, Gender gender, LocalDate birth) {
-        if (selectEmail(email)) {
-            return -999;
-        }
-
         Member member = new Member();
         member.setId(id);
         member.setPassword(PasswordUtil.encode(password));;
@@ -45,5 +42,24 @@ public class AuthService {
         member.setBirth(birth);
 
         return authMapper.insertMember(member);
+    }
+
+    public String findIdByEmail(String email) {
+        return authMapper.findIdByEmail(email);
+    }
+
+    public boolean updateMemberToWithdrawal(String id) {
+        int updated = authMapper.updateMemberToWithdrawal(id); // 01 = 상세 코드
+        return updated > 0;
+    }
+
+    public Integer countById(String id) {
+        return authMapper.countById(id);
+    }
+
+    public Integer updatePassword(String id, String password) {
+        String encodedPassword = PasswordUtil.encode(password);
+
+        return authMapper.updatePassword(id, encodedPassword);
     }
 }

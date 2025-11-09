@@ -1,7 +1,5 @@
 package com.pikcurchu.pikcur.controller;
 
-import com.pikcurchu.pikcur.dto.request.ReqSigninDto;
-import com.pikcurchu.pikcur.dto.request.ReqSignupDto;
 import com.pikcurchu.pikcur.dto.response.ResSigninDto;
 import com.pikcurchu.pikcur.util.JwtUtil;
 import com.pikcurchu.pikcur.service.AuthService;
@@ -24,18 +22,18 @@ public class AuthController {
 
     @Operation(summary = "로그인", description = "JWT 토큰 방식 로그인")
     @PostMapping("/members/signin")
-    public ResponseEntity<ResSigninDto> signin(@RequestBody ReqSigninDto loginDto) {
-        Member member = authService.authenticate(loginDto.getId(), loginDto.getPassword());
-        if(member != null) {
-            String token = JwtUtil.generateToken(member.getId());
+    public ResponseEntity<ResSigninDto> signin(@RequestBody Member member) {
+        Member memberDetail = authService.authenticate(member.getId(), member.getPassword());
+        if(memberDetail != null) {
+            String token = JwtUtil.generateToken(memberDetail.getId());
             ResSigninDto response = new ResSigninDto(
                     token,
-                    member.getMemberNo(),
-                    member.getId(),
-                    member.getName(),
-                    member.getAuthority()
+                    memberDetail.getMemberNo(),
+                    memberDetail.getId(),
+                    memberDetail.getName(),
+                    memberDetail.getAuthority()
             );
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<ResSigninDto>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -43,15 +41,52 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "회원가입 API")
     @PostMapping("/members/signup")
-    public ResponseEntity<Integer> signup(@RequestBody ReqSignupDto signupDto) {
-        int response = authService.insertMember(signupDto.getId()
-                , signupDto.getPassword()
-                , signupDto.getEmail()
-                , signupDto.getName()
-                , signupDto.getPhone()
-                , signupDto.getGender()
-                , signupDto.getBirth());
+    public ResponseEntity<Integer> signup(@RequestBody Member member) {
+        int response = authService.insertMember(member.getId()
+                , member.getPassword()
+                , member.getEmail()
+                , member.getName()
+                , member.getPhone()
+                , member.getGender()
+                , member.getBirth());
 
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "아이디 조회", description = "아이디 조회 API")
+    @PostMapping("/members/find-id")
+    public ResponseEntity<String> findIdByEmail(@RequestBody Member member) {
+        String response = authService.findIdByEmail(member.getEmail());
+
+        return new ResponseEntity<String>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "계정 삭제", description = "계정 삭제 API")
+    @PutMapping("/members/delete-account")
+    public ResponseEntity<Boolean> updateMemberToWithdrawal(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String userId = JwtUtil.getId(token);
+        Boolean response = authService.updateMemberToWithdrawal(userId);
+        return new ResponseEntity<Boolean>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "아이디 중복", description = "아이지 중복 체크 API")
+    @PostMapping("/members/duplicate-id")
+    public ResponseEntity<Integer> selectId(@RequestBody Member member) {
+        int response = authService.countById(member.getId());
+
+        return new ResponseEntity<Integer>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
+    @PostMapping("/members/password")
+    public ResponseEntity<Integer> updatePassword(@RequestBody Member member) {
+        int response = authService.updatePassword(member.getId(), member.getPassword());
+
+        if(response > 0) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 }
