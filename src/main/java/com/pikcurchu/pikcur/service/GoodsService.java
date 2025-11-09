@@ -1,5 +1,7 @@
 package com.pikcurchu.pikcur.service;
 
+import com.pikcurchu.pikcur.dto.request.ReqGoodsReportDto;
+import com.pikcurchu.pikcur.dto.request.ReqStoreReportDto;
 import com.pikcurchu.pikcur.dto.response.ResCategoryDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsDetailDto;
@@ -35,8 +37,23 @@ public class GoodsService {
         ResGoodsDetailDto goodsDetail = goodsMapper.findGoodsDetailById(goodsId, currentMemberNo);
 
         goodsDetail.setQuestions(goodsMapper.findQuestionsById(goodsId));
+        goodsMapper.insertGoodsHistory(goodsId, currentMemberNo);
+        goodsMapper.updateGoodsView(goodsId);
         // TODO: 조회수 + 1, 히스토리 추가 로직 예정
 
         return goodsDetail;
+    }
+
+    public void reportGoods(Integer goodsId, ReqGoodsReportDto reqGoodsReportDto) {
+        reqGoodsReportDto.setGoodsId(goodsId);
+        goodsMapper.insertGoodsReport(reqGoodsReportDto);
+    }
+
+    public void goodsLike(Integer goodsId, Integer memberNo) {
+        goodsMapper.insertGoodsLike(goodsId, memberNo);
+    }
+
+    public void deleteGoodsLike(Integer goodsId, Integer memberNo) {
+        goodsMapper.deleteGoodsLike(goodsId, memberNo);
     }
 }
