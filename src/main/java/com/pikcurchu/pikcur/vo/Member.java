@@ -1,5 +1,7 @@
 package com.pikcurchu.pikcur.vo;
 
+import com.pikcurchu.pikcur.enums.Authority;
+import com.pikcurchu.pikcur.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +21,8 @@ public class Member {
     private String email;
     private String phone;
     private LocalDate birth;
-    private String gender;
-    private String authority;
+    private Gender gender;
+    private Authority authority;
     private String statusType;
     private String statusNo;
     private LocalDateTime loginDate;

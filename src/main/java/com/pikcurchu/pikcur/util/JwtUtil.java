@@ -1,4 +1,4 @@
-package com.pikcurchu.pikcur.jwt;
+package com.pikcurchu.pikcur.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
