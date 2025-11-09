@@ -1,9 +1,9 @@
 package com.pikcurchu.pikcur.service;
 
+import com.pikcurchu.pikcur.dto.request.ReqStoreBlockDto;
+import com.pikcurchu.pikcur.dto.request.ReqStoreReportDto;
 import com.pikcurchu.pikcur.dto.response.*;
 import com.pikcurchu.pikcur.mapper.StoreMapper;
-import com.pikcurchu.pikcur.vo.Bid;
-import com.pikcurchu.pikcur.vo.Brand;
 import com.pikcurchu.pikcur.vo.GoodsLike;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class StoreService {
         return storeMapper.findStoreReviewById(storeId);
     }
 
-    public List<ResGoodesListDto> selectStoreGoods(Integer storeId, Integer currentMemberNo) {
+    public List<ResGoodsItemDto> selectStoreGoods(Integer storeId, Integer currentMemberNo) {
         return storeMapper.findStoreGoodsById(storeId, currentMemberNo);
     }
 
@@ -55,5 +55,19 @@ public class StoreService {
 
     public List<ResFollowItemDto> selectFollow(Integer memberNo) {
         return storeMapper.findFollowById(memberNo);
+    }
+
+    public List<ResQuestionItemDto> selectQuestions(Integer storeId) {
+        return storeMapper.findQuestionById(storeId);
+    }
+
+    public void reportStore(Integer storeId, ReqStoreReportDto reqStoreReportDto) {
+        reqStoreReportDto.setStoreId(storeId);
+        storeMapper.insertStoreReport(reqStoreReportDto);
+    }
+
+    public void blockStore(Integer storeId, ReqStoreBlockDto reqStoreBlockDto) {
+        reqStoreBlockDto.setStoreId(storeId);
+        storeMapper.insertStoreBlock(reqStoreBlockDto);
     }
 }

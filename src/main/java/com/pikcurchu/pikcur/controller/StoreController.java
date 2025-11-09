@@ -1,5 +1,7 @@
 package com.pikcurchu.pikcur.controller;
 
+import com.pikcurchu.pikcur.dto.request.ReqStoreBlockDto;
+import com.pikcurchu.pikcur.dto.request.ReqStoreReportDto;
 import com.pikcurchu.pikcur.dto.response.*;
 import com.pikcurchu.pikcur.service.StoreService;
 import com.pikcurchu.pikcur.vo.GoodsLike;
@@ -37,8 +39,8 @@ public class StoreController {
 
     @Operation(summary = "상품 리스트 조회", description = "상점 아이디를 통해 상품 리스트를 조회")
     @GetMapping("/{storeId}/goods")
-    public ResponseEntity<List<ResGoodesListDto>> selectStoreGoods(@PathVariable Integer storeId, Integer currentMemberNo) {
-        List<ResGoodesListDto> goodsList = storeService.selectStoreGoods(storeId, currentMemberNo);
+    public ResponseEntity<List<ResGoodsItemDto>> selectStoreGoods(@PathVariable Integer storeId, Integer currentMemberNo) {
+        List<ResGoodsItemDto> goodsList = storeService.selectStoreGoods(storeId, currentMemberNo);
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
@@ -57,30 +59,51 @@ public class StoreController {
     }
 
     @Operation(summary = "입찰 내역 리스트 조회", description = "회원번호를 통해 입찰한 리스트를 조회")
-    @GetMapping("/{memberNo}/bid")
+    @GetMapping("/{memberNo}/bids")
     public ResponseEntity<List<ResBidListDto>> selectStoreBids(@PathVariable Integer memberNo) {
         List<ResBidListDto> bids = storeService.selectStoreBids(memberNo);
         return new ResponseEntity<>(bids, HttpStatus.OK);
     }
 
     @Operation(summary = "찜 상품 리스트 조회", description = "회원 번호를 통해 찜한 상품 리스트를 조회")
-    @GetMapping("/{memberNo}/goods-like")
+    @GetMapping("/{memberNo}/goods-likes")
     public ResponseEntity<List<GoodsLike>> selectGoodsLike(@PathVariable Integer memberNo) {
         List<GoodsLike> goodsLikes = storeService.selectGoodsLike(memberNo);
         return new ResponseEntity<>(goodsLikes, HttpStatus.OK);
     }
 
     @Operation(summary = "찜 브랜드 리스트 조회", description = "회원 번호를 통해 찜한 브랜드 리스트를 조회")
-    @GetMapping("/{memberNo}/brand-like")
+    @GetMapping("/{memberNo}/brand-likes")
     public ResponseEntity<List<ResBrandItemDto>> selectBransLike(@PathVariable Integer memberNo) {
         List<ResBrandItemDto> brands = storeService.selectBransLike(memberNo);
         return new ResponseEntity<>(brands, HttpStatus.OK);
     }
 
     @Operation(summary = "팔로우 리스트 조회", description = "회원 번호를 통해 팔로우한 상점 리스트를 조회")
-    @GetMapping("/{memberNo}/follow")
+    @GetMapping("/{memberNo}/follows")
     public ResponseEntity<List<ResFollowItemDto>> selectFollow(@PathVariable Integer memberNo) {
         List<ResFollowItemDto> follows = storeService.selectFollow(memberNo);
         return new ResponseEntity<>(follows, HttpStatus.OK);
+    }
+
+    @Operation(summary = "문의 리스트 조회", description = "상점 번호를 통해 받은 상품관련 문의 리스트를 조회")
+    @GetMapping("/{storeId}/questions")
+    public ResponseEntity<List<ResQuestionItemDto>> selectQuestions(@PathVariable Integer storeId) {
+        List<ResQuestionItemDto> questions = storeService.selectQuestions(storeId);
+        return new ResponseEntity<>(questions, HttpStatus.OK);
+    }
+
+    @Operation(summary = "상점 신고", description = "상점 번호를 통해 해당 상점 신고")
+    @PostMapping("/{storeId}/report")
+    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreReportDto reqStoreReportDto) {
+        storeService.reportStore(storeId, reqStoreReportDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "상점 차단", description = "상점 번호를 통해 해당 상점 차단")
+    @PostMapping("/{storeId}/block")
+    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreBlockDto reqStoreBlockDto) {
+        storeService.blockStore(storeId, reqStoreBlockDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,8 +1,8 @@
 package com.pikcurchu.pikcur.mapper;
 
+import com.pikcurchu.pikcur.dto.request.ReqStoreBlockDto;
+import com.pikcurchu.pikcur.dto.request.ReqStoreReportDto;
 import com.pikcurchu.pikcur.dto.response.*;
-import com.pikcurchu.pikcur.vo.Bid;
-import com.pikcurchu.pikcur.vo.Brand;
 import com.pikcurchu.pikcur.vo.GoodsLike;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,7 +14,7 @@ public interface StoreMapper {
 
     List<ResReviewItemDto> findStoreReviewById(Integer storeId);
 
-    List<ResGoodesListDto> findStoreGoodsById(Integer storeId, Integer currentMemberNo);
+    List<ResGoodsItemDto> findStoreGoodsById(Integer storeId, Integer currentMemberNo);
 
     List<ResTransactionItemDto> findStoreSellTranactionById(Integer storeId);
 
@@ -27,4 +27,10 @@ public interface StoreMapper {
     List<ResBrandItemDto> findBrandLikeById(Integer memberNo);
 
     List<ResFollowItemDto> findFollowById(Integer memberNo);
+
+    List<ResQuestionItemDto> findQuestionById(Integer storeId);
+
+    void insertStoreReport(ReqStoreReportDto reqStoreReportDto);
+
+    void insertStoreBlock(ReqStoreBlockDto reqStoreBlockDto);
 }
