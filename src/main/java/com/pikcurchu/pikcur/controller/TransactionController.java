@@ -1,5 +1,6 @@
 package com.pikcurchu.pikcur.controller;
 
+import com.pikcurchu.pikcur.dto.request.ReqShippingDto;
 import com.pikcurchu.pikcur.dto.response.ResTransactionDetailDto;
 import com.pikcurchu.pikcur.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,8 +41,8 @@ public class TransactionController {
     }
     @Operation(summary = "거래 운송장 등록", description = "거래 아이디를 통한 상품 운송장 번호 등록")
     @PostMapping("/{transactionId}/shipping")
-    public ResponseEntity<Void> insertTrackingNumber(@PathVariable Integer transactionId, @RequestParam String trackingNumber, @RequestParam String company) {
-        transactionService.insertTrackingNumber(transactionId, trackingNumber, company);
+    public ResponseEntity<Void> insertShippingInfo(@PathVariable Integer transactionId, @RequestBody ReqShippingDto reqShippingDto) {
+        transactionService.insertShippingInfo(transactionId, reqShippingDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @Operation(summary = "거래 구매확정 (상태 변경)", description = "거래 아이디를 통한 거래 구매확정 상태 변경")

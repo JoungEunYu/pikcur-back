@@ -54,10 +54,10 @@
             review_choice rc on rc.review_choice_id = rm.review_choice_id
         where store_id = #{storeId}
         group by r.review_id
-        order by r.create_date;
+        order by r.create_date desc;
 
     </select>
-    <select id="findStoreGoodsById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodesListDto">
+    <select id="findStoreGoodsById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
         SELECT
         g.goods_id,
         g.category_id,
@@ -91,7 +91,8 @@
         g.start_price,
         g.auction_end_date,
         g.create_date,
-        sm.status_name;
+        sm.status_name
+        order by g.create_date desc;
     </select>
     <select id="findStoreSellTranactionById" resultType="com.pikcurchu.pikcur.dto.response.ResTransactionItemDto">
         SELECT
@@ -152,7 +153,7 @@
         b.member_no = #{memberNo}
         order by b.create_date desc;
     </select>
-    <select id="findGoodsLikeById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodesListDto">
+    <select id="findGoodsLikeById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
         SELECT
             g.goods_id,
             g.category_id,
@@ -184,7 +185,8 @@
         g.start_price,
         g.auction_end_date,
         g.create_date,
-        sm.status_name;
+        sm.status_name
+        order by gl.create_date desc;
     </select>
     <select id="findBrandLikeById" resultType="com.pikcurchu.pikcur.dto.response.ResBrandItemDto">
         select
@@ -198,7 +200,8 @@
         from brand b
         join
         brand_like bl ON bl.brand_id = b.brand_id
-        where bl.member_no = #{memberNo};
+        where bl.member_no = #{memberNo}
+        order by bl.create_date desc;
     </select>
     <select id="findFollowById" resultType="com.pikcurchu.pikcur.dto.response.ResFollowItemDto">
         select
@@ -211,6 +214,32 @@
         end as isFollow
         from store s
         join follow f ON f.store_id = s.store_id
-        where f.member_no = #{memberNo};
+        where f.member_no = #{memberNo}
+        order by f.create_date desc;
     </select>
+    <select id="findQuestionById" resultType="com.pikcurchu.pikcur.dto.response.ResQuestionItemDto">
+        select
+        q.member_no,
+        g.store_id,
+        q.question_id,
+        q.title,
+        q.create_date,
+        case
+        when a.question_id is not null then true
+        else false
+        end as isAnswer
+        from question q
+        join goods g on g.goods_id = q.goods_id
+        left join answer a on a.question_id = q.question_id
+        where g.store_id = #{storeId}
+        order by q.create_date desc;
+    </select>
+    <insert id="insertStoreReport" parameterType="com.pikcurchu.pikcur.dto.request.ReqStoreReportDto">
+        insert into store_report(store_id, member_no)
+        values(#{storeId}, #{memberNo});
+    </insert>
+    <insert id="insertStoreBlock" parameterType="com.pikcurchu.pikcur.dto.request.ReqStoreBlockDto">
+        insert into block(store_id, member_no)
+        values(#{storeId}, #{memberNo});
+    </insert>
 </mapper>

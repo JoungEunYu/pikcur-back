@@ -1,5 +1,6 @@
 package com.pikcurchu.pikcur.service;
 
+import com.pikcurchu.pikcur.dto.request.ReqShippingDto;
 import com.pikcurchu.pikcur.dto.response.ResTransactionDetailDto;
 import com.pikcurchu.pikcur.mapper.TransactionsMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,9 @@ public class TransactionService {
         return transactionMapper.findTransactionInfoById(transactionId);
     }
 
-//    public ResStoreInfoDto selectShippingStatus(Integer transactionId) {
-//    }
-
-    public void insertTrackingNumber(Integer transactionId, String trackingNumber, String company) {
-        transactionMapper.insertShippingInfo(transactionId, trackingNumber,company);
+    public void insertShippingInfo(Integer transactionId, ReqShippingDto reqShippingDto) {
+        reqShippingDto.setTransactionId(transactionId);
+        transactionMapper.insertShippingInfo(reqShippingDto);
     }
 
     public void confirmPurchase(Integer transactionId) {

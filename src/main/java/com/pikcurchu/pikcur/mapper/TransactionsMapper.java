@@ -1,5 +1,6 @@
 package com.pikcurchu.pikcur.mapper;
 
+import com.pikcurchu.pikcur.dto.request.ReqShippingDto;
 import com.pikcurchu.pikcur.dto.response.ResTransactionDetailDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -7,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface TransactionsMapper {
     ResTransactionDetailDto findTransactionInfoById(Integer transactionId);
 
-    void insertShippingInfo(Integer transactionId, String trackingNumber, String company);
+    void insertShippingInfo(ReqShippingDto reqShippingDto);
 
     void updateTransactionStatus(Integer transactionId);
 }

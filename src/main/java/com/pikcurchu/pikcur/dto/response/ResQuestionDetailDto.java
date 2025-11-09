@@ -1,21 +1,18 @@
-package com.pikcurchu.pikcur.vo;
+package com.pikcurchu.pikcur.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question {
+public class ResQuestionDetailDto {
     private Integer questionId;
-    private Integer memberNo;
-    private Integer goodsId;
+    private Integer memberNo; /* 등록한 회원*/
+    private Integer storeId; /* 받은 회원 */
     private String title;
     private String content;
     private String imagePath;
-    private LocalDateTime createDate;
-    private String isPrivate;
+    private AnswerInfo answerInfo;
 }

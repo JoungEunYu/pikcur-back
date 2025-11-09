@@ -52,12 +52,12 @@
           WHERE
           t.transaction_id = #{transactionId}
       </select>
-    <insert id="insertShippingInfo">
+    <insert id="insertShippingInfo" parameterType="com.pikcurchu.pikcur.dto.request.ReqShippingDto">
         insert into shipping(transaction_id, tracking_number, company) values (#{transactionId}, #{trackingNumber}, #{company})
     </insert>
     <update id="updateTransactionStatus">
         <!--    상태 코드 수정 예정    -->
-        update Transactions set status_no = '01' where transaction_id = #{transactionId};
+        update Transactions set status_no = '06' where transaction_id = #{transactionId};
     </update>
     <resultMap id="transactionInfoResultMap" type="com.pikcurchu.pikcur.dto.response.ResTransactionDetailDto">
 
