@@ -16,6 +16,14 @@
         id = #{id}
     </select>
 
+    <select id="findStatusNo" resultType="boolean">
+        select
+            status_no
+        from
+            member
+        where id = #{id}
+    </select>
+
     <insert id="insertMember" parameterType="com.pikcurchu.pikcur.vo.Member">
         INSERT INTO member (
         id,
@@ -55,7 +63,36 @@
         )
     </insert>
 
-    <select id="countByEmail" parameterType="string" resultType="int">
-        SELECT COUNT(*) FROM member WHERE email = #{email}
+    <select id="findIdByEmail" parameterType="string" resultType="String">
+        SELECT id FROM member WHERE email = #{email}
     </select>
+
+    <update id="updateMemberToWithdrawal" parameterType="String">
+        UPDATE member
+        SET status_no = '02',
+        update_date = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="countById" parameterType="String" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            member
+        WHERE
+            id = #{id}
+        and (
+                status_no = '01'
+            or  status_no = '03'
+            or  status_no = '04'
+        )
+    </select>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE member
+        SET
+            password = #{password}
+        ,   update_date = NOW()
+        WHERE id = #{id}
+    </update>
 </mapper>

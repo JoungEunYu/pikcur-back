@@ -1,8 +1,8 @@
 package com.pikcurchu.pikcur.service;
 
+import com.pikcurchu.pikcur.mapper.EmailMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,22 +16,27 @@ import java.util.concurrent.TimeUnit;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final StringRedisTemplate redisTemplate;
+    private final EmailMapper emailMapper;
 
-    public EmailService(JavaMailSender mailSender, StringRedisTemplate redisTemplate) {
+    public EmailService(JavaMailSender mailSender, StringRedisTemplate redisTemplate, EmailMapper emailMapper) {
         this.mailSender = mailSender;
         this.redisTemplate = redisTemplate;
+        this.emailMapper = emailMapper;
     }
 
     private String createCode() {
         Random random = new Random();
-        int code = random.nextInt(900000) + 100000; // 100000 ~ 999999
+        int code = random.nextInt(900000) + 100000;
         return String.valueOf(code);
     }
 
     public boolean sendVerificationCode(String email) {
+        if (selectEmail(email)) {
+            return false;
+        }
+
         String code = createCode();
 
-        // Redis에 3분 TTL로 저장
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         ops.set("auth:" + email, code, 3, TimeUnit.MINUTES);
 
@@ -54,5 +59,9 @@ public class EmailService {
         String savedCode = ops.get("auth:" + email);
 
         return savedCode != null && savedCode.equals(inputCode);
+    }
+
+    public boolean selectEmail(String email) {
+        return emailMapper.countByEmail(email) > 0;
     }
 }
