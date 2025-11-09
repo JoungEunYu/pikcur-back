@@ -1,5 +1,6 @@
 package com.pikcurchu.pikcur.controller;
 
+import com.pikcurchu.pikcur.dto.request.ReqGoodsReportDto;
 import com.pikcurchu.pikcur.dto.response.ResCategoryDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsDetailDto;
@@ -60,5 +61,25 @@ public class GoodsController {
     public ResponseEntity<ResGoodsDetailDto> selectGoodsDetailById(@PathVariable Integer goodsId, @RequestParam Integer currentMemberNo) {
         ResGoodsDetailDto goodsDetail = goodsService.selectGoodsDetailById(goodsId, currentMemberNo);
         return new ResponseEntity<>(goodsDetail, HttpStatus.OK);
+    }
+
+    @Operation(summary = "상품 신고", description = "상품 번호를 통해 해당 상품 신고")
+    @PostMapping("/{goodsId}/report")
+    public ResponseEntity<Void> reportGoods(@PathVariable Integer goodsId, @RequestBody ReqGoodsReportDto reqGoodsReportDto) {
+        goodsService.reportGoods(goodsId, reqGoodsReportDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "상품 찜", description = "상품 번호를 통해 해당 상품 찜")
+    @PostMapping("/{goodsId}/like")
+    public ResponseEntity<Void> goodsLike(@PathVariable Integer goodsId, @RequestParam Integer memberNo) {
+        goodsService.goodsLike(goodsId, memberNo);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @Operation(summary = "상품 찜 취소", description = "상품 번호를 통해 해당 상품 찜 취소")
+    @DeleteMapping("/{goodsId}/like")
+    public ResponseEntity<Void> deleteGoodsLike(@PathVariable Integer goodsId, @RequestParam Integer memberNo) {
+        goodsService.deleteGoodsLike(goodsId, memberNo);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

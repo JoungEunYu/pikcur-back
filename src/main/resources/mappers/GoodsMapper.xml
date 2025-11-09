@@ -250,7 +250,21 @@
         WHERE q.goods_id = #{goodsId}
         ORDER BY q.create_date DESC;
     </select>
-
+    <insert id="insertGoodsReport">
+        insert into goods_report(goods_id, member_no) values(#{goodsId}, #{memberNo})
+    </insert>
+    <insert id="insertGoodsLike">
+        insert into goods_like(goods_id, member_no) values(#{goodsId}, #{memberNo})
+    </insert>
+    <delete id="deleteGoodsLike">
+        delete from goods_like where goods_id = #{goodsId} and member_no = #{memberNo}
+    </delete>
+    <insert id="insertGoodsHistory">
+        insert into goods_history(goods_id, member_no) values(#{goodsId}, #{currentMemberNo})
+    </insert>
+    <update id="updateGoodsView">
+        update goods set views = views + 1 where goods_id = #{goodsId}
+    </update>
     <resultMap id="categoryResultMap" type="com.pikcurchu.pikcur.dto.response.ResCategoryDto">
 
         <id property="categoryId" column="parent_id"/>

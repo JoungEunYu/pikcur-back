@@ -1,5 +1,6 @@
 package com.pikcurchu.pikcur.mapper;
 
+import com.pikcurchu.pikcur.dto.request.ReqGoodsReportDto;
 import com.pikcurchu.pikcur.dto.response.QuestionInfo;
 import com.pikcurchu.pikcur.dto.response.ResCategoryDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
@@ -23,4 +24,14 @@ public interface GoodsMapper {
     ResGoodsDetailDto findGoodsDetailById(Integer goodsId, Integer currentMemberNo);
 
     List<QuestionInfo> findQuestionsById(Integer goodsId);
+
+    void insertGoodsReport(ReqGoodsReportDto reqGoodsReportDto);
+
+    void insertGoodsLike(Integer goodsId, Integer memberNo);
+
+    void deleteGoodsLike(Integer goodsId, Integer memberNo);
+
+    void insertGoodsHistory(Integer goodsId, Integer currentMemberNo);
+
+    void updateGoodsView(Integer goodsId);
 }
