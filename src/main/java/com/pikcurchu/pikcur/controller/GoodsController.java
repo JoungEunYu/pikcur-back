@@ -1,5 +1,6 @@
 package com.pikcurchu.pikcur.controller;
 
+import com.pikcurchu.pikcur.dto.request.ReqGoodsDto;
 import com.pikcurchu.pikcur.dto.request.ReqGoodsReportDto;
 import com.pikcurchu.pikcur.dto.response.ResCategoryDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
@@ -73,13 +74,20 @@ public class GoodsController {
     @Operation(summary = "상품 찜", description = "상품 번호를 통해 해당 상품 찜")
     @PostMapping("/{goodsId}/like")
     public ResponseEntity<Void> goodsLike(@PathVariable Integer goodsId, @RequestParam Integer memberNo) {
-        goodsService.goodsLike(goodsId, memberNo);
+        goodsService.insertGoodsLike(goodsId, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @Operation(summary = "상품 찜 취소", description = "상품 번호를 통해 해당 상품 찜 취소")
     @DeleteMapping("/{goodsId}/like")
     public ResponseEntity<Void> deleteGoodsLike(@PathVariable Integer goodsId, @RequestParam Integer memberNo) {
         goodsService.deleteGoodsLike(goodsId, memberNo);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "상품 등록", description = "경매 상품 등록")
+    @PostMapping
+    public ResponseEntity<Void> insertGoods(@RequestBody ReqGoodsDto reqGoodsDto) {
+        goodsService.insertGoods(reqGoodsDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

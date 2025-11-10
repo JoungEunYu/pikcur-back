@@ -33,28 +33,28 @@ public class StoreService {
         return storeMapper.findStoreGoodsById(storeId, currentMemberNo);
     }
 
-    public List<ResTransactionItemDto> selectStoreSellTransaction(Integer memberNo) {
-        return storeMapper.findStoreSellTranactionById(memberNo);
+    public List<ResTransactionItemDto> selectStoreSellTransaction(Integer storeId) {
+        return storeMapper.findStoreSellTranactionById(storeId);
     }
 
-    public List<ResTransactionItemDto> selectStoreBuyTransaction(Integer memberNo) {
-        return storeMapper.findStoreBuyTranactionById(memberNo);
+    public List<ResTransactionItemDto> selectStoreBuyTransaction(Integer storeId) {
+        return storeMapper.findStoreBuyTranactionById(storeId);
     }
 
-    public List<ResBidListDto> selectStoreBids(Integer memberNo) {
-        return storeMapper.findBidById(memberNo);
+    public List<ResBidListDto> selectStoreBids(Integer storeId) {
+        return storeMapper.findBidById(storeId);
     }
 
-    public List<GoodsLike> selectGoodsLike(Integer memberNo) {
-        return storeMapper.findGoodsLikeById(memberNo);
+    public List<GoodsLike> selectGoodsLike(Integer storeId) {
+        return storeMapper.findGoodsLikeById(storeId);
     }
 
-    public List<ResBrandItemDto> selectBransLike(Integer memberNo) {
-        return storeMapper.findBrandLikeById(memberNo);
+    public List<ResBrandItemDto> selectBransLike(Integer storeId) {
+        return storeMapper.findBrandLikeById(storeId);
     }
 
-    public List<ResFollowItemDto> selectFollow(Integer memberNo) {
-        return storeMapper.findFollowById(memberNo);
+    public List<ResFollowItemDto> selectFollow(Integer storeId) {
+        return storeMapper.findFollowById(storeId);
     }
 
     public List<ResQuestionItemDto> selectQuestions(Integer storeId) {

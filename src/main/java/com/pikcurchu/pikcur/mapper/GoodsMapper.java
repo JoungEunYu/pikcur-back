@@ -1,10 +1,12 @@
 package com.pikcurchu.pikcur.mapper;
 
+import com.pikcurchu.pikcur.dto.request.ReqGoodsDto;
 import com.pikcurchu.pikcur.dto.request.ReqGoodsReportDto;
 import com.pikcurchu.pikcur.dto.response.QuestionInfo;
 import com.pikcurchu.pikcur.dto.response.ResCategoryDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsDetailDto;
+import com.pikcurchu.pikcur.vo.Goods;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -34,4 +36,12 @@ public interface GoodsMapper {
     void insertGoodsHistory(Integer goodsId, Integer currentMemberNo);
 
     void updateGoodsView(Integer goodsId);
+
+    void insertGoods(ReqGoodsDto reqGoodsDto);
+
+    List<Goods> findExpiredGoods();
+
+    void updateGoodsStatus(String statusNo, Integer goodsId);
+
+    Integer findMemberNoOfStore(Integer storeId);
 }

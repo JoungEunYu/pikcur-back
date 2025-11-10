@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pikcurchu.pikcur.mapper.BidMapper">
+    <select id="selectBidList" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsBidListDto">
+        select
+        b.bid_id,
+        m.id AS memberId,
+        b.bid_price,
+        b.create_date
+        from bid b
+        join member m ON m.member_no = b.member_no
+        where b.goods_id = #{goodsId}
+        order by b.bid_price desc;
+    </select>
+    <insert id="insertBid" useGeneratedKeys="true" keyProperty="bidId">
+        insert into bid(member_no, goods_id, bid_price)
+        values(#{memberNo}, #{goodsId}, #{bidPrice});
+    </insert>
+    <update id="updateBidStatus">
+        update bid set status_no = #{statusNo} where bid_id = #{bidId}
+    </update>
+    <select id="findTopBidder" resultType="com.pikcurchu.pikcur.vo.Bid">
+        SELECT *
+        FROM bid
+        WHERE goods_id = #{goodsId}
+        ORDER BY bid_price DESC
+        LIMIT 1
+    </select>
+
+</mapper>

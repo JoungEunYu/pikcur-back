@@ -22,11 +22,11 @@ public interface StoreMapper {
 
     List<ResBidListDto> findBidById(Integer storeId);
 
-    List<GoodsLike> findGoodsLikeById(Integer memberNo);
+    List<GoodsLike> findGoodsLikeById(Integer storeId);
 
-    List<ResBrandItemDto> findBrandLikeById(Integer memberNo);
+    List<ResBrandItemDto> findBrandLikeById(Integer storeId);
 
-    List<ResFollowItemDto> findFollowById(Integer memberNo);
+    List<ResFollowItemDto> findFollowById(Integer storeId);
 
     List<ResQuestionItemDto> findQuestionById(Integer storeId);
 

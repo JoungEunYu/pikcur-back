@@ -265,6 +265,53 @@
     <update id="updateGoodsView">
         update goods set views = views + 1 where goods_id = #{goodsId}
     </update>
+    <insert id="insertGoods">
+        insert into goods(
+        store_id,
+        category_id,
+        brand_id,
+        goods_name,
+        goods_info,
+        buyout_price,
+        start_price,
+        shipping_price,
+        auction_end_date,
+        quality,
+        size
+        ) values (
+        (SELECT store_id FROM store WHERE member_no = #{memberNo}),
+        #{categoryId},
+        #{brandId},
+        #{goodsName},
+        #{goodsInfo},
+        #{buyoutPrice},
+        #{startPrice},
+        #{shippingPrice},
+        #{auctionEndDate},
+        #{quality},
+        #{size}
+        );
+    </insert>
+    <select id="findExpiredGoods" resultType="com.pikcurchu.pikcur.vo.Goods">
+        <![CDATA[
+        SELECT *
+        FROM Goods
+        WHERE auction_end_date <= NOW()
+        AND status_no = '01'
+    ]]>
+    </select>
+
+    <update id="updateGoodsStatus">
+        UPDATE Goods
+        SET status_no = #{statusNo}
+        WHERE goods_id = #{goodsId}
+    </update>
+
+    <select id="findMemberNoOfStore" resultType="java.lang.Integer">
+        SELECT member_no
+        FROM store where store_id = #{storeId}
+    </select>
+
     <resultMap id="categoryResultMap" type="com.pikcurchu.pikcur.dto.response.ResCategoryDto">
 
         <id property="categoryId" column="parent_id"/>
