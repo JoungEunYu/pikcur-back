@@ -48,8 +48,8 @@ public class AuthService {
         return authMapper.findIdByEmail(email);
     }
 
-    public boolean updateMemberToWithdrawal(String id) {
-        int updated = authMapper.updateMemberToWithdrawal(id); // 01 = 상세 코드
+    public boolean updateMemberToWithdrawal(Integer memberNo) {
+        int updated = authMapper.updateMemberToWithdrawal(memberNo); // 01 = 상세 코드
         return updated > 0;
     }
 
@@ -57,9 +57,9 @@ public class AuthService {
         return authMapper.countById(id);
     }
 
-    public Integer updatePassword(String id, String password) {
+    public Integer updatePassword(Integer memberNo, String password) {
         String encodedPassword = PasswordUtil.encode(password);
 
-        return authMapper.updatePassword(id, encodedPassword);
+        return authMapper.updatePassword(memberNo, encodedPassword);
     }
 }

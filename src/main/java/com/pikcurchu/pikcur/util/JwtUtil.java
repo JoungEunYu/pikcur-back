@@ -12,9 +12,10 @@ public class JwtUtil {
 
     private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
-    public static String generateToken(String id) {
+    public static String generateToken(Integer memberNo) {
         return Jwts.builder()
-                .setSubject(id)
+                .setSubject(String.valueOf(memberNo))
+                .claim("memberNo", memberNo)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -33,12 +34,12 @@ public class JwtUtil {
         }
     }
 
-    public static String getId(String token) {
-        return Jwts.parserBuilder()
+    public static Integer getMemberNo(String token) {
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+        return claims.get("memberNo", Integer.class);
     }
 }
