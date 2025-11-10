@@ -65,11 +65,11 @@
         SELECT id FROM member WHERE email = #{email}
     </select>
 
-    <update id="updateMemberToWithdrawal" parameterType="String">
+    <update id="updateMemberToWithdrawal" parameterType="int">
         UPDATE member
         SET status_no = '02',
         update_date = NOW()
-        WHERE id = #{id}
+        WHERE member_no = #{memberNo}
     </update>
 
     <select id="countById" parameterType="String" resultType="int">
@@ -91,6 +91,6 @@
         SET
             password = #{password}
         ,   update_date = NOW()
-        WHERE id = #{id}
+        WHERE member_no = #{memberNo}
     </update>
 </mapper>

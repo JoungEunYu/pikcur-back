@@ -11,9 +11,9 @@ public interface AuthMapper {
 
     String findIdByEmail(String email);
 
-    int updateMemberToWithdrawal(String id);
+    int updateMemberToWithdrawal(Integer memberNo);
 
     int countById(String id);
 
-    int updatePassword(String id, String password);
+    int updatePassword(Integer memberNo, String password);
 }

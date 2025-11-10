@@ -6,6 +6,7 @@ import com.pikcurchu.pikcur.service.AuthService;
 import com.pikcurchu.pikcur.vo.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,9 @@ public class AuthController {
     public ResponseEntity<ResSigninDto> signin(@RequestBody Member member) {
         Member memberDetail = authService.authenticate(member.getId(), member.getPassword());
         if(memberDetail != null) {
-            String token = JwtUtil.generateToken(memberDetail.getId());
+            String token = JwtUtil.generateToken(memberDetail.getMemberNo());
             ResSigninDto response = new ResSigninDto(
                     token,
-                    memberDetail.getMemberNo(),
                     memberDetail.getId(),
                     memberDetail.getName(),
                     memberDetail.getAuthority()
@@ -63,11 +63,15 @@ public class AuthController {
 
     @Operation(summary = "계정 삭제", description = "계정 삭제 API")
     @PutMapping("/members/delete-account")
-    public ResponseEntity<Boolean> updateMemberToWithdrawal(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.substring(7);
-        String userId = JwtUtil.getId(token);
-        Boolean response = authService.updateMemberToWithdrawal(userId);
-        return new ResponseEntity<Boolean>(response, HttpStatus.OK);
+    public ResponseEntity<Boolean> updateMemberToWithdrawal(HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+
+        if (memberNo <= 0) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Boolean response = authService.updateMemberToWithdrawal(memberNo);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "아이디 중복", description = "아이지 중복 체크 API")
@@ -80,10 +84,15 @@ public class AuthController {
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
     @PostMapping("/members/password")
-    public ResponseEntity<Integer> updatePassword(@RequestBody Member member) {
-        int response = authService.updatePassword(member.getId(), member.getPassword());
+    public ResponseEntity<Integer> updatePassword(@RequestBody Member member, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
 
-        if(response > 0) {
+        if (memberNo <= 0) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(0);
+        }
+
+        int response = authService.updatePassword(memberNo, member.getPassword());
+        if (response > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

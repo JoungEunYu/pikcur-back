@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResSigninDto {
     private String token;      // JWT 토큰
-    private Integer memberNo;  // 회원 번호
     private String id;         // 회원 아이디
     private String name;       // 이름
     private Authority authority;  // 권한
