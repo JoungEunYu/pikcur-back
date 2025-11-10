@@ -11,4 +11,6 @@ public interface TransactionsMapper {
     void insertShippingInfo(ReqShippingDto reqShippingDto);
 
     void updateTransactionStatus(Integer transactionId);
+
+    void createTransaction(Integer buyerNo, Integer sellerNo, Integer goodsId, Integer bidPrice);
 }

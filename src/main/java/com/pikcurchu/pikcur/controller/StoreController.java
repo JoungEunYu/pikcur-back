@@ -44,45 +44,45 @@ public class StoreController {
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
-    @Operation(summary = "판매한 거래 리스트 조회", description = "회원번호를 통해 판매한 거래 리스트를 조회")
-    @GetMapping("/{memberNo}/transactions/sell")
-    public ResponseEntity<List<ResTransactionItemDto>> selectStoreSellTransaction(@PathVariable Integer memberNo) {
-        List<ResTransactionItemDto> transactions = storeService.selectStoreSellTransaction(memberNo);
+    @Operation(summary = "판매한 거래 리스트 조회", description = "판매한 거래 리스트를 조회")
+    @GetMapping("/{storeId}/transactions/sell")
+    public ResponseEntity<List<ResTransactionItemDto>> selectStoreSellTransaction(@PathVariable Integer storeId) {
+        List<ResTransactionItemDto> transactions = storeService.selectStoreSellTransaction(storeId);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    @Operation(summary = "구매한 거래 리스트 조회", description = "회원번호를 통해 구매한 거래 리스트를 조회")
-    @GetMapping("/{memberNo}/transactions/buy")
-    public ResponseEntity<List<ResTransactionItemDto>> selectStoreBuyTransaction(@PathVariable Integer memberNo) {
-        List<ResTransactionItemDto> transactions = storeService.selectStoreBuyTransaction(memberNo);
+    @Operation(summary = "구매한 거래 리스트 조회", description = "구매한 거래 리스트를 조회")
+    @GetMapping("/{storeId}/transactions/buy")
+    public ResponseEntity<List<ResTransactionItemDto>> selectStoreBuyTransaction(@PathVariable Integer storeId) {
+        List<ResTransactionItemDto> transactions = storeService.selectStoreBuyTransaction(storeId);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    @Operation(summary = "입찰 내역 리스트 조회", description = "회원번호를 통해 입찰한 리스트를 조회")
-    @GetMapping("/{memberNo}/bids")
-    public ResponseEntity<List<ResBidListDto>> selectStoreBids(@PathVariable Integer memberNo) {
-        List<ResBidListDto> bids = storeService.selectStoreBids(memberNo);
+    @Operation(summary = "입찰 내역 리스트 조회", description = "입찰한 리스트를 조회")
+    @GetMapping("/{storeId}/bids")
+    public ResponseEntity<List<ResBidListDto>> selectStoreBids(@PathVariable Integer storeId) {
+        List<ResBidListDto> bids = storeService.selectStoreBids(storeId);
         return new ResponseEntity<>(bids, HttpStatus.OK);
     }
 
-    @Operation(summary = "찜 상품 리스트 조회", description = "회원 번호를 통해 찜한 상품 리스트를 조회")
-    @GetMapping("/{memberNo}/goods-likes")
-    public ResponseEntity<List<GoodsLike>> selectGoodsLike(@PathVariable Integer memberNo) {
-        List<GoodsLike> goodsLikes = storeService.selectGoodsLike(memberNo);
+    @Operation(summary = "찜 상품 리스트 조회", description = "찜한 상품 리스트를 조회")
+    @GetMapping("/{storeId}/goods-likes")
+    public ResponseEntity<List<GoodsLike>> selectGoodsLike(@PathVariable Integer storeId) {
+        List<GoodsLike> goodsLikes = storeService.selectGoodsLike(storeId);
         return new ResponseEntity<>(goodsLikes, HttpStatus.OK);
     }
 
-    @Operation(summary = "찜 브랜드 리스트 조회", description = "회원 번호를 통해 찜한 브랜드 리스트를 조회")
-    @GetMapping("/{memberNo}/brand-likes")
-    public ResponseEntity<List<ResBrandItemDto>> selectBransLike(@PathVariable Integer memberNo) {
-        List<ResBrandItemDto> brands = storeService.selectBransLike(memberNo);
+    @Operation(summary = "찜 브랜드 리스트 조회", description = "찜한 브랜드 리스트를 조회")
+    @GetMapping("/{storeId}/brand-likes")
+    public ResponseEntity<List<ResBrandItemDto>> selectBransLike(@PathVariable Integer storeId) {
+        List<ResBrandItemDto> brands = storeService.selectBransLike(storeId);
         return new ResponseEntity<>(brands, HttpStatus.OK);
     }
 
-    @Operation(summary = "팔로우 리스트 조회", description = "회원 번호를 통해 팔로우한 상점 리스트를 조회")
-    @GetMapping("/{memberNo}/follows")
-    public ResponseEntity<List<ResFollowItemDto>> selectFollow(@PathVariable Integer memberNo) {
-        List<ResFollowItemDto> follows = storeService.selectFollow(memberNo);
+    @Operation(summary = "팔로우 리스트 조회", description = "팔로우한 상점 리스트를 조회")
+    @GetMapping("/{storeId}/follows")
+    public ResponseEntity<List<ResFollowItemDto>> selectFollow(@PathVariable Integer storeId) {
+        List<ResFollowItemDto> follows = storeService.selectFollow(storeId);
         return new ResponseEntity<>(follows, HttpStatus.OK);
     }
 

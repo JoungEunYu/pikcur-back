@@ -59,6 +59,11 @@
         <!--    상태 코드 수정 예정    -->
         update Transactions set status_no = '06' where transaction_id = #{transactionId};
     </update>
+    <insert id="createTransaction">
+        INSERT INTO Transactions (buyer_no, seller_no, goods_id, price)
+        VALUES (#{buyerNo}, #{sellerNo}, #{goodsId}, #{bidPrice});
+    </insert>
+
     <resultMap id="transactionInfoResultMap" type="com.pikcurchu.pikcur.dto.response.ResTransactionDetailDto">
 
         <id property="transactionId" column="transaction_id" />

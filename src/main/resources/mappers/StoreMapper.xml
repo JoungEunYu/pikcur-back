@@ -110,7 +110,7 @@
         join
         Status_master sm ON t.status_no = sm.status_no AND t.status_type = sm.status_type
         WHERE
-        t.seller_no = #{memberNo}
+        t.seller_no = (SELECT member_no FROM store where store_id = #{storeId})
         ORDER BY
         t.start_date DESC;
     </select>
@@ -130,7 +130,7 @@
         join
         Status_master sm ON t.status_no = sm.status_no AND t.status_type = sm.status_type
         WHERE
-        t.buyer_no = #{memberNo}
+        t.buyer_no = (SELECT member_no FROM store where store_id = #{storeId})
         ORDER BY
         t.start_date DESC;
     </select>
@@ -150,7 +150,7 @@
         join
         store s ON s.member_no = b.member_no
         where
-        b.member_no = #{memberNo}
+        b.member_no = (SELECT member_no FROM store where store_id = #{storeId})
         order by b.create_date desc;
     </select>
     <select id="findGoodsLikeById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
@@ -171,8 +171,8 @@
             sm.status_name
         from goods_like gl
         join
-        goods g on g.goods_id = gl.goods_id and gl.member_no = #{memberNo}
-        join
+        goods g on g.goods_id = gl.goods_id and gl.member_no = (SELECT member_no FROM store where store_id = #{storeId})
+        left join
         bid b on g.goods_id = b.goods_id
         join
         Status_master sm ON g.status_no = sm.status_no AND g.status_type = sm.status_type
@@ -200,7 +200,7 @@
         from brand b
         join
         brand_like bl ON bl.brand_id = b.brand_id
-        where bl.member_no = #{memberNo}
+        where bl.member_no = (SELECT member_no FROM store where store_id = #{storeId})
         order by bl.create_date desc;
     </select>
     <select id="findFollowById" resultType="com.pikcurchu.pikcur.dto.response.ResFollowItemDto">
@@ -214,7 +214,7 @@
         end as isFollow
         from store s
         join follow f ON f.store_id = s.store_id
-        where f.member_no = #{memberNo}
+        where f.member_no = (SELECT member_no FROM store where store_id = #{storeId})
         order by f.create_date desc;
     </select>
     <select id="findQuestionById" resultType="com.pikcurchu.pikcur.dto.response.ResQuestionItemDto">

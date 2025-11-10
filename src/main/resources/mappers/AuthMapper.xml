@@ -16,7 +16,7 @@
         id = #{id}
     </select>
 
-    <select id="findStatusNo" resultType="boolean">
+    <select id="findStatusNo" resultType="String">
         select
             status_no
         from
@@ -39,7 +39,6 @@
         login_date,
         create_date,
         update_date,
-        account,
         bank,
         block_list
         )
@@ -56,7 +55,6 @@
         '01',
         null,
         NOW(),
-        null,
         null,
         null,
         null
