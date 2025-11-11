@@ -19,16 +19,19 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            if (JwtUtil.validateToken(token)) {
-                Integer memberNo = JwtUtil.getMemberNo(token);
-                request.setAttribute("memberNo", memberNo);
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
+
+        String token = authHeader.substring(7);
+        if (!JwtUtil.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        Integer memberNo = JwtUtil.getMemberNo(token);
+        request.setAttribute("memberNo", memberNo);
 
         filterChain.doFilter(request, response);
     }
