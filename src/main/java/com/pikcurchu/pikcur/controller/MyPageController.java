@@ -1,6 +1,7 @@
 package com.pikcurchu.pikcur.controller;
 
 import com.pikcurchu.pikcur.dto.response.MyPageInfoDto;
+import com.pikcurchu.pikcur.dto.response.ResMyStoreDto;
 import com.pikcurchu.pikcur.service.MyPageService;
 import com.pikcurchu.pikcur.vo.Member;
 import com.pikcurchu.pikcur.vo.Store;
@@ -26,10 +27,6 @@ public class MyPageController {
     public ResponseEntity<MyPageInfoDto> selectMyInfoById(HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
 
-        if (memberNo <= 0) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
         MyPageInfoDto response = myPageService.selectMyInfoById(memberNo);
 
         return new ResponseEntity<MyPageInfoDto>(response, HttpStatus.OK);
@@ -40,10 +37,6 @@ public class MyPageController {
     public ResponseEntity<Integer> updateMyInfo(@RequestBody Member member, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
 
-        if (memberNo > 0) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
         member.setMemberNo(memberNo);
 
         int response = myPageService.updateMyInfo(member);
@@ -52,9 +45,20 @@ public class MyPageController {
     }
 
     @Operation(summary = "내상점 조회", description = "내 상점 조회 API")
-    @PutMapping("/profiletest")
-    public ResponseEntity<Integer> test(@RequestBody Store store, HttpServletRequest request) {
-        Integer response = 1;
+    @GetMapping("/store")
+    public ResponseEntity<ResMyStoreDto> selectMyStore(HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+
+        ResMyStoreDto response = myPageService.selectMyStore(memberNo);
+
+        return new ResponseEntity<ResMyStoreDto>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "내상점 수정", description = "내 상점 수정 API")
+    @PutMapping("/store")
+    public ResponseEntity<Integer> updateMyStore(@RequestBody Store store) {
+        Integer response = myPageService.updateMyStore(store);
+
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
     }
 }
