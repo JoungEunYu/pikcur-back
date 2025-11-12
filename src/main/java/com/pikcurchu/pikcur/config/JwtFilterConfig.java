@@ -21,7 +21,8 @@ public class JwtFilterConfig {
         registration.addUrlPatterns(
                 "/auth/members/delete-account",
                 "/auth/members/password",
-                "/mypage/profile"
+                "/mypage/profile",
+                "/mypage/store"
         );
         registration.setOrder(1);
         return registration;

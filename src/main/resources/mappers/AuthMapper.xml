@@ -24,7 +24,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertMember" parameterType="com.pikcurchu.pikcur.vo.Member">
+    <insert id="insertMember" parameterType="com.pikcurchu.pikcur.vo.Member" useGeneratedKeys="true" keyProperty="memberNo">
         INSERT INTO member (
         id,
         password,
@@ -93,4 +93,19 @@
         ,   update_date = NOW()
         WHERE member_no = #{memberNo}
     </update>
+
+    <insert id="insertStore" parameterType="map">
+        INSERT INTO store (
+            member_no
+        ,   profile
+        ,   store_name
+        ,   store_info
+        )
+        VALUES (
+            #{memberNo}
+        ,   null
+        ,   #{storeName}
+        ,   CONCAT(#{storeName}, '입니다.')
+        )
+    </insert>
 </mapper>

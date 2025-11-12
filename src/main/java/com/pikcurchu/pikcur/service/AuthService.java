@@ -5,6 +5,7 @@ import com.pikcurchu.pikcur.mapper.AuthMapper;
 import com.pikcurchu.pikcur.util.PasswordUtil;
 import com.pikcurchu.pikcur.vo.Member;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -31,6 +32,7 @@ public class AuthService {
         return null;
     }
 
+    @Transactional
     public int insertMember(String id, String password, String email, String name, String phone, Gender gender, LocalDate birth) {
         Member member = new Member();
         member.setId(id);
@@ -41,7 +43,14 @@ public class AuthService {
         member.setGender(gender);
         member.setBirth(birth);
 
-        return authMapper.insertMember(member);
+        int result = authMapper.insertMember(member);
+
+        if (result > 0 && member.getMemberNo() != null) {
+            String storeName = name + "님의 상점";
+            result += authMapper.insertStore(member.getMemberNo(), storeName);
+        }
+
+        return result;
     }
 
     public String findIdByEmail(String email) {
@@ -61,5 +70,9 @@ public class AuthService {
         String encodedPassword = PasswordUtil.encode(password);
 
         return authMapper.updatePassword(memberNo, encodedPassword);
+    }
+
+    public int insertStore(Integer memberNo, String storeName) {
+        return authMapper.insertStore(memberNo, storeName);
     }
 }
