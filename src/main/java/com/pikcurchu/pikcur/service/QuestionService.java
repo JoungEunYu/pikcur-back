@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 public class QuestionService {
     private final QuestionMapper questionMapper;
 
-    public void insertQuestion(ReqQuestionDto questionDto) {
+    public void insertQuestion(ReqQuestionDto questionDto, Integer memberNo) {
+        questionDto.setMemberNo(memberNo);
         questionMapper.insertQuestion(questionDto);
     }
 
-    public void insertAnswer(Integer questionId, ReqAnswerDto answerDto) {
+    public void insertAnswer(Integer questionId, ReqAnswerDto answerDto, Integer memberNo) {
+        answerDto.setMemberNo(memberNo);
         answerDto.setQuestionId(questionId);
         questionMapper.insertAnswer(answerDto);
     }

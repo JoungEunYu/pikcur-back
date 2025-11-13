@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 public class ReviewService {
     private final ReviewMapper reviewMapper;
 
-    public void insertReview(Integer storeId, ReqReviewDto reqReviewDto) {
+    public void insertReview(Integer storeId, ReqReviewDto reqReviewDto, Integer memberNo) {
         reqReviewDto.setStoreId(storeId);
+        reqReviewDto.setMemberNo(memberNo);
         reviewMapper.insertReview(reqReviewDto);
         Integer reviewId = reqReviewDto.getReviewId();
 

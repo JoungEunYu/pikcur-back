@@ -7,6 +7,7 @@ import com.pikcurchu.pikcur.service.StoreService;
 import com.pikcurchu.pikcur.vo.GoodsLike;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,9 @@ public class StoreController {
 
     @Operation(summary = "상점 정보 조회", description = "상점 아이디를 통해 상점 정보를 조회")
     @GetMapping("/{storeId}")
-    public ResponseEntity<ResStoreDetailDto> selectStoreInfo(@PathVariable Integer storeId, Integer currentMemberNo) {
-        ResStoreDetailDto store = storeService.selectStoreInfo(storeId, currentMemberNo);
+    public ResponseEntity<ResStoreDetailDto> selectStoreInfo(@PathVariable Integer storeId, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        ResStoreDetailDto store = storeService.selectStoreInfo(storeId, memberNo);
         return new ResponseEntity<>(store, HttpStatus.OK);
     }
 
@@ -39,8 +41,9 @@ public class StoreController {
 
     @Operation(summary = "상품 리스트 조회", description = "상점 아이디를 통해 상품 리스트를 조회")
     @GetMapping("/{storeId}/goods")
-    public ResponseEntity<List<ResGoodsItemDto>> selectStoreGoods(@PathVariable Integer storeId, Integer currentMemberNo) {
-        List<ResGoodsItemDto> goodsList = storeService.selectStoreGoods(storeId, currentMemberNo);
+    public ResponseEntity<List<ResGoodsItemDto>> selectStoreGoods(@PathVariable Integer storeId, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        List<ResGoodsItemDto> goodsList = storeService.selectStoreGoods(storeId, memberNo);
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
@@ -95,15 +98,17 @@ public class StoreController {
 
     @Operation(summary = "상점 신고", description = "상점 번호를 통해 해당 상점 신고")
     @PostMapping("/{storeId}/report")
-    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreReportDto reqStoreReportDto) {
-        storeService.reportStore(storeId, reqStoreReportDto);
+    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreReportDto reqStoreReportDto, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        storeService.reportStore(storeId, reqStoreReportDto, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "상점 차단", description = "상점 번호를 통해 해당 상점 차단")
     @PostMapping("/{storeId}/block")
-    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreBlockDto reqStoreBlockDto) {
-        storeService.blockStore(storeId, reqStoreBlockDto);
+    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreBlockDto reqStoreBlockDto, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        storeService.blockStore(storeId, reqStoreBlockDto, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

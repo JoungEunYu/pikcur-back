@@ -10,5 +10,5 @@ public class ResBrandDetailDto {
     private String brandName;
     private String brandProfile;
     private String brandInfo;
-    private boolean isLike;
+    private boolean isLiked;
 }

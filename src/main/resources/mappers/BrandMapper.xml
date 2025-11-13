@@ -11,9 +11,9 @@
         case
         when bl.brand_like_id is not null then true
         else false
-        end as isLike
+        end as isLiked
         from brand b
-        join brand_like bl ON bl.brand_id = b.brand_id and bl.member_no = #{memberNo}
+        left join brand_like bl ON bl.brand_id = b.brand_id and bl.member_no = #{memberNo}
         where b.brand_id = #{brandId};
     </select>
     <select id="selectBrandGoodsList" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
@@ -27,10 +27,11 @@
         g.auction_end_date,
         g.create_date,
         COUNT(b.goods_id) as bidCount,
-        case
-        when gl.goods_like_id is not null then true
-        else false
-        end as isLike,
+        CASE
+        WHEN #{memberNo} IS NULL THEN FALSE
+        WHEN gl.goods_like_id IS NOT NULL THEN TRUE
+        ELSE FALSE
+        END AS isLiked,
         sm.status_name
         from goods g
         left join

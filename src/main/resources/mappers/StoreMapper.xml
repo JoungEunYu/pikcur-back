@@ -71,7 +71,7 @@
         case
         when gl.goods_like_id is not null then true
         else false
-        end as isLike,
+        end as isLiked,
         sm.status_name
         from goods g
         left join
@@ -167,7 +167,7 @@
             case
             when gl.goods_like_id is not null then true
             else false
-            end as isLike,
+            end as isLiked,
             sm.status_name
         from goods_like gl
         join
@@ -196,7 +196,7 @@
         case
         when bl.brand_like_id is not null then true
         else false
-        end as isLike
+        end as isLiked
         from brand b
         join
         brand_like bl ON bl.brand_id = b.brand_id

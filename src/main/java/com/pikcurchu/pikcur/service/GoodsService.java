@@ -17,36 +17,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GoodsService {
     private final GoodsMapper goodsMapper;
-    public List<ResGoodsItemDto> selectPopularGoodsList(Integer currentMemberNo) {
-        return goodsMapper.findPopularGoodsList(currentMemberNo);
+    public List<ResGoodsItemDto> selectPopularGoodsList(Integer memberNo) {
+        return goodsMapper.findPopularGoodsList(memberNo);
     }
-    public List<ResGoodsItemDto> selectRecentViewGoodsList(Integer currentMemberNo) {
-        return goodsMapper.findRecentViewGoodsList(currentMemberNo);
+    public List<ResGoodsItemDto> selectRecentViewGoodsList(Integer memberNo) {
+        return goodsMapper.findRecentViewGoodsList(memberNo);
     }
-    public List<ResGoodsItemDto> selectGoodsListByEndDate(Integer currentMemberNo) {
-        return goodsMapper.findGoodsByAuctionEndAsc(currentMemberNo);
+    public List<ResGoodsItemDto> selectGoodsListByEndDate(Integer memberNo) {
+        return goodsMapper.findGoodsByAuctionEndAsc(memberNo);
     }
     public List<ResCategoryDto> selectCategories() {
         return goodsMapper.findCategories();
     }
 
-    public List<ResGoodsItemDto> selectGoodsListByCategoryId(Integer categoryId, Integer currentMemberNo) {
-        return goodsMapper.findGoodsListByCategoryId(categoryId, currentMemberNo);
+    public List<ResGoodsItemDto> selectGoodsListByCategoryId(Integer categoryId, Integer memberNo) {
+        return goodsMapper.findGoodsListByCategoryId(categoryId, memberNo);
     }
 
-    public ResGoodsDetailDto selectGoodsDetailById(Integer goodsId, Integer currentMemberNo) {
-        ResGoodsDetailDto goodsDetail = goodsMapper.findGoodsDetailById(goodsId, currentMemberNo);
-
+    public ResGoodsDetailDto selectGoodsDetailById(Integer goodsId, Integer memberNo) {
+        ResGoodsDetailDto goodsDetail = goodsMapper.findGoodsDetailById(goodsId, memberNo);
+    System.out.println(memberNo);
         goodsDetail.setQuestions(goodsMapper.findQuestionsById(goodsId));
-        goodsMapper.insertGoodsHistory(goodsId, currentMemberNo);
+        if(memberNo != null) {
+            goodsMapper.insertGoodsHistory(goodsId, memberNo);
+        }
         goodsMapper.updateGoodsView(goodsId);
 
         return goodsDetail;
     }
 
-    public void reportGoods(Integer goodsId, ReqGoodsReportDto reqGoodsReportDto) {
-        reqGoodsReportDto.setGoodsId(goodsId);
-        goodsMapper.insertGoodsReport(reqGoodsReportDto);
+    public void reportGoods(Integer goodsId, Integer memberNo) {
+        goodsMapper.insertGoodsReport(goodsId, memberNo);
     }
 
     public void insertGoodsLike(Integer goodsId, Integer memberNo) {
@@ -57,7 +58,8 @@ public class GoodsService {
         goodsMapper.deleteGoodsLike(goodsId, memberNo);
     }
 
-    public void insertGoods(ReqGoodsDto reqGoodsDto) {
+    public void insertGoods(ReqGoodsDto reqGoodsDto, Integer memberNo) {
+        reqGoodsDto.setMemberNo(memberNo);
         goodsMapper.insertGoods(reqGoodsDto);
     }
 }

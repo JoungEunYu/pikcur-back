@@ -7,6 +7,7 @@ import com.pikcurchu.pikcur.dto.response.ResStoreDetailDto;
 import com.pikcurchu.pikcur.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +22,17 @@ public class QuestionController {
 
     @Operation(summary = "문의 등록", description = "문의 객체를 받아 등록")
     @PostMapping
-    public ResponseEntity<Void> insertQuestion(@RequestBody ReqQuestionDto questionDto) {
-        questionService.insertQuestion(questionDto);
+    public ResponseEntity<Void> insertQuestion(@RequestBody ReqQuestionDto questionDto, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        questionService.insertQuestion(questionDto, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "답변 등록", description = "답변 객체를 받아 등록")
     @PostMapping("/{questionId}/answer")
-    public ResponseEntity<Void> insertAnswer(@PathVariable Integer questionId, @RequestBody ReqAnswerDto answerDto) {
-        questionService.insertAnswer(questionId, answerDto);
+    public ResponseEntity<Void> insertAnswer(@PathVariable Integer questionId, @RequestBody ReqAnswerDto answerDto, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        questionService.insertAnswer(questionId, answerDto, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

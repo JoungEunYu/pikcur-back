@@ -18,8 +18,9 @@ public class BidService {
         return bidMapper.selectBidList(goodsId);
     }
 
-    public void insertBid(Integer goodsId, ReqBidDto reqBidDto) {
+    public void insertBid(Integer goodsId, ReqBidDto reqBidDto, Integer memberNo) {
         reqBidDto.setGoodsId(goodsId);
+        reqBidDto.setMemberNo(memberNo);
         bidMapper.insertBid(reqBidDto);
         bidMapper.updateBidStatus("02", reqBidDto.getGoodsId(), reqBidDto.getBidId());
 
