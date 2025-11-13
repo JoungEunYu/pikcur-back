@@ -65,11 +65,6 @@ public class AuthController {
     @PutMapping("/members/delete-account")
     public ResponseEntity<Boolean> updateMemberToWithdrawal(HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-
-        if (memberNo <= 0) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
         Boolean response = authService.updateMemberToWithdrawal(memberNo);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -86,11 +81,6 @@ public class AuthController {
     @PostMapping("/members/password")
     public ResponseEntity<Integer> updatePassword(@RequestBody Member member, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-
-        if (memberNo <= 0) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(0);
-        }
-
         int response = authService.updatePassword(memberNo, member.getPassword());
         if (response > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);

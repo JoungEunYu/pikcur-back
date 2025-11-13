@@ -22,6 +22,7 @@ public class JwtFilterConfig {
                 "/auth/members/delete-account",
                 "/auth/members/password",
                 "/mypage/profile",
+                "/mypage/store",
                 "/goods/*/report",
                 "/goods/*/like",
                 "/goods",
