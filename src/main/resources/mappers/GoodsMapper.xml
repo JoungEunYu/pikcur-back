@@ -14,9 +14,10 @@
         g.create_date,
         COALESCE(b.bidCount, 0) AS bidCount,
         CASE
+        WHEN #{memberNo} IS NULL THEN FALSE
         WHEN glMember.goods_like_id IS NOT NULL THEN TRUE
         ELSE FALSE
-        END AS isLike,
+        END AS isLiked,
         sm.status_name
         FROM goods g
         LEFT JOIN (
@@ -27,7 +28,7 @@
         LEFT JOIN (
         SELECT goods_id, goods_like_id
         FROM goods_like
-        WHERE member_no = #{currentMemberNo}
+        WHERE member_no = #{memberNo}
         ) glMember ON g.goods_id = glMember.goods_id
         LEFT JOIN Status_master sm
         ON g.status_type = sm.status_type
@@ -53,9 +54,10 @@
         g.create_date,
         COALESCE(b.bidCount, 0) AS bidCount,
         CASE
+        WHEN #{memberNo} IS NULL THEN FALSE
         WHEN glMember.goods_like_id IS NOT NULL THEN TRUE
         ELSE FALSE
-        END AS isLike,
+        END AS isLiked,
         sm.status_name
         FROM goods g
         LEFT JOIN (
@@ -66,19 +68,16 @@
         LEFT JOIN (
         SELECT goods_id, goods_like_id
         FROM goods_like
-        WHERE member_no = #{currentMemberNo}
+        WHERE member_no = #{memberNo}
         ) glMember ON g.goods_id = glMember.goods_id
         LEFT JOIN Status_master sm
         ON g.status_type = sm.status_type
         AND g.status_no = sm.status_no
-        LEFT JOIN (
-        SELECT gh1.goods_id
-        FROM goods_history gh1
         INNER JOIN (
-        SELECT goods_id, MAX(create_date) AS max_date
+        SELECT goods_id, MAX(create_date) AS last_view
         FROM goods_history
+        WHERE member_no = #{memberNo}
         GROUP BY goods_id
-        ) gh2 ON gh1.goods_id = gh2.goods_id AND gh1.create_date = gh2.max_date
         ) gh ON g.goods_id = gh.goods_id
         ORDER BY gh.goods_id DESC;
 
@@ -95,9 +94,10 @@
         g.create_date,
         COALESCE(b.bidCount, 0) AS bidCount,
         CASE
+        WHEN #{memberNo} IS NULL THEN FALSE
         WHEN glMember.goods_like_id IS NOT NULL THEN TRUE
         ELSE FALSE
-        END AS isLike,
+        END AS isLiked,
         sm.status_name
         FROM goods g
         LEFT JOIN (
@@ -108,7 +108,7 @@
         LEFT JOIN (
         SELECT goods_id, goods_like_id
         FROM goods_like
-        WHERE member_no = #{currentMemberNo}
+        WHERE member_no = #{memberNo}
         ) glMember ON g.goods_id = glMember.goods_id
         LEFT JOIN Status_master sm
         ON g.status_type = sm.status_type
@@ -146,9 +146,10 @@
         g.create_date,
         COALESCE(b.bidCount, 0) AS bidCount,
         CASE
+        WHEN #{memberNo} IS NULL THEN FALSE
         WHEN glMember.goods_like_id IS NOT NULL THEN TRUE
         ELSE FALSE
-        END AS isLike,
+        END AS isLiked,
         sm.status_name
         FROM goods g
         LEFT JOIN (
@@ -159,7 +160,7 @@
         LEFT JOIN (
         SELECT goods_id, goods_like_id
         FROM goods_like
-        WHERE member_no = #{currentMemberNo}
+        WHERE member_no = #{memberNo}
         ) glMember ON g.goods_id = glMember.goods_id
         LEFT JOIN Status_master sm
         ON g.status_type = sm.status_type
@@ -170,70 +171,70 @@
     </select>
     <select id="findGoodsDetailById" resultMap="GoodsDetailResultMap">
         <![CDATA[
-            WITH RECURSIVE category_path AS (
-            -- 루트부터 시작
-            SELECT c.category_id, c.category_name, c.parents_id, 1 AS lvl
-            FROM category c
-            WHERE c.parents_id IS NULL
-            UNION ALL
-            SELECT c.category_id, c.category_name, c.parents_id, cp.lvl + 1
-            FROM category c
-            JOIN category_path cp ON c.parents_id = cp.category_id
+    WITH RECURSIVE category_path AS (
+        SELECT c.category_id, c.category_name, c.parents_id, 1 AS lvl
+        FROM category c
+        WHERE c.parents_id IS NULL
+        UNION ALL
+        SELECT c.category_id, c.category_name, c.parents_id, cp.lvl + 1
+        FROM category c
+        JOIN category_path cp ON c.parents_id = cp.category_id
+    )
+    SELECT
+    g.goods_id,
+    g.goods_name,
+    b.brand_name,
+    b.brand_id,
+    MAX(bi.bid_price) AS current_bid_price,
+    g.buyout_price,
+    g.start_price,
+    g.shipping_price,
+    g.quality,
+    g.auction_end_date,
+    g.size,
+    sm.status_name,
+    g.goods_info,
+
+    -- 이미지 리스트
+    (SELECT GROUP_CONCAT(i.image_path ORDER BY i.sort)
+     FROM image i
+     WHERE i.goods_id = g.goods_id
+    ) AS image_list,
+
+    -- 카테고리 경로
+    (SELECT GROUP_CONCAT(cp.category_name ORDER BY cp.lvl ASC)
+     FROM category_path cp
+     JOIN category c ON c.category_id = g.category_id
+     WHERE cp.category_id = c.category_id
+        OR cp.category_id IN (
+            SELECT parents_id
+            FROM category_path
+            WHERE category_id = g.goods_id
         )
-        SELECT
-            g.goods_id,
-            g.goods_name,
-            b.brand_name,
-            b.brand_id,
-            MAX(bi.bid_price) AS current_bid_price,
-            g.buyout_price,
-            g.start_price,
-            g.shipping_price,
-            g.quality,
-            g.auction_end_date,
-            g.size,
-            sm.status_name,
-            g.goods_info,
+    ) AS category_path,
 
-            -- 이미지 리스트
-            (SELECT GROUP_CONCAT(i.image_path ORDER BY i.sort)
-             FROM image i
-             WHERE i.goods_id = g.goods_id
-            ) AS image_list,
+    -- 좋아요 여부: memberNo가 null이면 0
+    CASE WHEN #{memberNo} IS NULL THEN 0
+         ELSE (SELECT COUNT(*)
+               FROM goods_like l
+               WHERE l.goods_id = g.goods_id
+                 AND l.member_no = #{memberNo})
+        END AS is_liked,
 
-            -- 카테고리 경로: 루트 → 자식
-            (SELECT GROUP_CONCAT(cp.category_name ORDER BY cp.lvl ASC)
-             FROM category_path cp
-             JOIN category c ON c.category_id = g.category_id
-             WHERE cp.category_id = c.category_id
-                OR cp.category_id IN (
-                    SELECT parents_id
-                    FROM category_path
-                    WHERE category_id = g.category_id
-                )
-            ) AS category_path,
-
-            -- 좋아요 여부
-            (SELECT COUNT(*)
-             FROM goods_like l
-             WHERE l.goods_id = g.goods_id
-               AND l.member_no = #{currentMemberNo}
-            ) AS is_liked,
-
-            -- 상점 정보
-            s.store_id,
-            s.store_name,
-            s.profile,
-            (SELECT AVG(r.rating) FROM review r WHERE r.store_id = s.store_id) AS average_rating,
-            (SELECT COUNT(*) FROM review r WHERE r.store_id = s.store_id) AS review_count
-        FROM goods g
-        JOIN store s ON s.store_id = g.store_id
-        JOIN brand b ON b.brand_id = g.brand_id
-        LEFT JOIN bid bi ON bi.goods_id = g.goods_id
-        JOIN status_master sm ON sm.status_type = g.status_type AND sm.status_no = g.status_no
-        WHERE g.goods_id = #{goodsId}
-        GROUP BY g.goods_id;
-        ]]>
+        -- 상점 정보
+        s.store_id,
+        s.store_name,
+        s.profile,
+        (SELECT AVG(r.rating) FROM review r WHERE r.store_id = s.store_id) AS average_rating,
+        (SELECT COUNT(*) FROM review r WHERE r.store_id = s.store_id) AS review_count
+    FROM goods g
+    JOIN store s ON s.store_id = g.store_id
+    JOIN brand b ON b.brand_id = g.brand_id
+    LEFT JOIN bid bi ON bi.goods_id = g.goods_id
+    JOIN status_master sm ON sm.status_type = g.status_type AND sm.status_no = g.status_no
+    WHERE g.goods_id = #{goodsId}
+    GROUP BY g.goods_id;
+    ]]>
     </select>
     <select id="findQuestionsById" >
         SELECT
@@ -260,7 +261,7 @@
         delete from goods_like where goods_id = #{goodsId} and member_no = #{memberNo}
     </delete>
     <insert id="insertGoodsHistory">
-        insert into goods_history(goods_id, member_no) values(#{goodsId}, #{currentMemberNo})
+        insert into goods_history(goods_id, member_no) values(#{goodsId}, #{memberNo})
     </insert>
     <update id="updateGoodsView">
         update goods set views = views + 1 where goods_id = #{goodsId}

@@ -17,8 +17,8 @@ public class StoreService {
         this.storeMapper = storeMapper;
     }
 
-    public ResStoreDetailDto selectStoreInfo(Integer storeId, Integer currentMemberNo) {
-        ResStoreDetailDto storeDto = storeMapper.findStoreInfoById(storeId, currentMemberNo);
+    public ResStoreDetailDto selectStoreInfo(Integer storeId, Integer memberNo) {
+        ResStoreDetailDto storeDto = storeMapper.findStoreInfoById(storeId, memberNo);
 
         if (storeDto == null) {throw new IllegalArgumentException("Invalid store ID: " + storeId); }
 
@@ -29,8 +29,8 @@ public class StoreService {
         return storeMapper.findStoreReviewById(storeId);
     }
 
-    public List<ResGoodsItemDto> selectStoreGoods(Integer storeId, Integer currentMemberNo) {
-        return storeMapper.findStoreGoodsById(storeId, currentMemberNo);
+    public List<ResGoodsItemDto> selectStoreGoods(Integer storeId, Integer memberNo) {
+        return storeMapper.findStoreGoodsById(storeId, memberNo);
     }
 
     public List<ResTransactionItemDto> selectStoreSellTransaction(Integer storeId) {
@@ -61,13 +61,15 @@ public class StoreService {
         return storeMapper.findQuestionById(storeId);
     }
 
-    public void reportStore(Integer storeId, ReqStoreReportDto reqStoreReportDto) {
+    public void reportStore(Integer storeId, ReqStoreReportDto reqStoreReportDto, Integer memberNo) {
         reqStoreReportDto.setStoreId(storeId);
+        reqStoreReportDto.setMemberNo(memberNo);
         storeMapper.insertStoreReport(reqStoreReportDto);
     }
 
-    public void blockStore(Integer storeId, ReqStoreBlockDto reqStoreBlockDto) {
+    public void blockStore(Integer storeId, ReqStoreBlockDto reqStoreBlockDto, Integer memberNo) {
         reqStoreBlockDto.setStoreId(storeId);
+        reqStoreBlockDto.setMemberNo(memberNo);
         storeMapper.insertStoreBlock(reqStoreBlockDto);
     }
 }

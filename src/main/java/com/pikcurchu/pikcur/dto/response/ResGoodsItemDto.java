@@ -19,7 +19,7 @@ public class ResGoodsItemDto {
     private LocalDateTime auctionEndDate;
     private LocalDateTime createDate;
     private Integer bidCount;
-    private boolean isLike;
+    private boolean isLiked;
     private String statusName;
 
 }

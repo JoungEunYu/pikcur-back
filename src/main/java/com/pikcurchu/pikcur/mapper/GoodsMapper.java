@@ -13,27 +13,27 @@ import java.util.List;
 
 @Mapper
 public interface GoodsMapper {
-    List<ResGoodsItemDto> findPopularGoodsList(Integer currentMemberNo);
+    List<ResGoodsItemDto> findPopularGoodsList(Integer memberNo);
 
-    List<ResGoodsItemDto> findRecentViewGoodsList(Integer currentMemberNo);
+    List<ResGoodsItemDto> findRecentViewGoodsList(Integer memberNo);
 
-    List<ResGoodsItemDto> findGoodsByAuctionEndAsc(Integer currentMemberNo);
+    List<ResGoodsItemDto> findGoodsByAuctionEndAsc(Integer memberNo);
 
     List<ResCategoryDto> findCategories();
 
-    List<ResGoodsItemDto> findGoodsListByCategoryId(Integer categoryId, Integer currentMemberNo);
+    List<ResGoodsItemDto> findGoodsListByCategoryId(Integer categoryId, Integer memberNo);
 
-    ResGoodsDetailDto findGoodsDetailById(Integer goodsId, Integer currentMemberNo);
+    ResGoodsDetailDto findGoodsDetailById(Integer goodsId, Integer memberNo);
 
     List<QuestionInfo> findQuestionsById(Integer goodsId);
 
-    void insertGoodsReport(ReqGoodsReportDto reqGoodsReportDto);
+    void insertGoodsReport(Integer goodsId, Integer memberNo);
 
     void insertGoodsLike(Integer goodsId, Integer memberNo);
 
     void deleteGoodsLike(Integer goodsId, Integer memberNo);
 
-    void insertGoodsHistory(Integer goodsId, Integer currentMemberNo);
+    void insertGoodsHistory(Integer goodsId, Integer memberNo);
 
     void updateGoodsView(Integer goodsId);
 

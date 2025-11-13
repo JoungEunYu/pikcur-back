@@ -7,6 +7,7 @@ import com.pikcurchu.pikcur.dto.response.ResGoodsBidListDto;
 import com.pikcurchu.pikcur.service.BidService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,22 +17,23 @@ import java.util.List;
 
 @RestController
 @Tag(name="bid api", description = "입찰 관련 api")
-@RequestMapping("/goods")
+@RequestMapping("/bid")
 @RequiredArgsConstructor
 public class BidController {
     private final BidService bidService;
 
     @Operation(summary = "입찰 리스트 조회", description = "상품 아이디를 통한 입찰 리스트 조회")
-    @GetMapping("/{goodsId}/bids")
+    @GetMapping("/{goodsId}/list")
     public ResponseEntity<List<ResGoodsBidListDto>> selectBidList(@PathVariable Integer goodsId) {
         List<ResGoodsBidListDto> bidList = bidService.selectBidList(goodsId);
         return new ResponseEntity<>(bidList, HttpStatus.OK);
     }
 
     @Operation(summary = "입찰 등록", description = "상품에 대한 입찰 등록")
-    @PostMapping("/{goodsId}/bids")
-    public ResponseEntity<Void> insertBid(@PathVariable Integer goodsId, @RequestBody ReqBidDto reqBidDto) {
-        bidService.insertBid(goodsId, reqBidDto);
+    @PostMapping("/{goodsId}")
+    public ResponseEntity<Void> insertBid(@PathVariable Integer goodsId, @RequestBody ReqBidDto reqBidDto, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        bidService.insertBid(goodsId, reqBidDto, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
