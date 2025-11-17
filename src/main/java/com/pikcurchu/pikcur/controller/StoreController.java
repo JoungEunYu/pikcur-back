@@ -111,4 +111,19 @@ public class StoreController {
         storeService.blockStore(storeId, reqStoreBlockDto, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Operation(summary = "팔로우", description = "팔로우")
+    @PostMapping("/follow/{storeId}")
+    public ResponseEntity<Integer> insertFollow(@PathVariable Integer storeId, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        Integer response = storeService.insertFollow(storeId, memberNo);
+        return new ResponseEntity<Integer>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "팔로우 삭제", description = "팔로우 삭제")
+    @DeleteMapping("/follow/{followId}")
+    public ResponseEntity<Integer> deleteFollow(@PathVariable Integer followId) {
+        Integer response = storeService.deleteFollow(followId);
+        return new ResponseEntity<Integer>(response, HttpStatus.OK);
+    }
 }

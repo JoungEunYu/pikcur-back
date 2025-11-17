@@ -72,4 +72,12 @@ public class StoreService {
         reqStoreBlockDto.setMemberNo(memberNo);
         storeMapper.insertStoreBlock(reqStoreBlockDto);
     }
+
+    public Integer insertFollow(Integer storeId, Integer memberNo) {
+        return storeMapper.insertFollow(storeId, memberNo);
+    }
+
+    public Integer deleteFollow(Integer followId) {
+        return storeMapper.deleteFollow(followId);
+    }
 }

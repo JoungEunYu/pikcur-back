@@ -16,4 +16,7 @@ public interface MyPageMapper {
     ResMyStoreDto selectMyStore(Integer memberNo);
 
     int updateMyStore(Store store);
+
+    int updatePassword(Integer memberNo, String password);
+
 }
