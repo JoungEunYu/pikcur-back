@@ -32,7 +32,7 @@ public class AuctionService {
 
             if (topBid != null) {
                 // 3. 거래 생성(낙찰)
-                Integer sellerNo = goodsMapper.findMemberNoOfStore(goods.getStoreId());
+                Integer sellerNo = goodsMapper.selectMemberNoOfStore(goods.getStoreId());
                 transMapper.createTransaction(
                         topBid.getMemberNo(),
                         sellerNo,

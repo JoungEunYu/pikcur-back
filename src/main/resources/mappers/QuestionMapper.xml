@@ -2,14 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pikcurchu.pikcur.mapper.QuestionMapper">
-    <insert id="insertQuestion" parameterType="com.pikcurchu.pikcur.dto.request.ReqQuestionDto">
-        insert into question(goods_id, member_no, title, content, image, is_public)
-        values (#{goodsId}, #{memberNo}, #{title}, #{content}, #{imagePath}, #{isPublic})
+    <insert id="insertQuestion" useGeneratedKeys="true" keyProperty="questionId" parameterType="com.pikcurchu.pikcur.dto.request.ReqQuestionDto">
+        insert into question(goods_id, member_no, title, content, is_public)
+        values (#{goodsId}, #{memberNo}, #{title}, #{content}, #{isPublic})
     </insert>
-    <insert id="insertAnswer" parameterType="com.pikcurchu.pikcur.dto.request.ReqAnswerDto">
+    <update id="updateQuestionImagePath">
+        update question set image = #{uploadedPath} where question_id = #{questionId}
+    </update>
+    <insert id="insertAnswer" useGeneratedKeys="true" keyProperty="answerId" parameterType="com.pikcurchu.pikcur.dto.request.ReqAnswerDto">
         insert into answer(question_id, member_no, title, content, image)
         values (#{questionId}, #{memberNo}, #{title}, #{content}, #{imagePath})
     </insert>
+    <update id="updateAnswerImagePath">
+        update answer set image = #{uploadedPath} where answer_id = #{answerId}
+    </update>
     <select id="findQuestionDetailById" resultMap="questionDetailResultMap">
         select
         q.question_id,

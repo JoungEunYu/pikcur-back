@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pikcurchu.pikcur.mapper.BidMapper">
-    <select id="selectBidList" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsBidListDto">
+    <select id="selectBidList" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsBidItemDto">
         select
         b.bid_id,
         m.id AS memberId,
@@ -11,7 +11,8 @@
         from bid b
         join member m ON m.member_no = b.member_no
         where b.goods_id = #{goodsId}
-        order by b.bid_price desc;
+        order by b.bid_price desc
+        LIMIT #{limit} OFFSET #{offset};
     </select>
     <insert id="insertBid" useGeneratedKeys="true" keyProperty="bidId">
         insert into bid(member_no, goods_id, bid_price)
@@ -27,5 +28,9 @@
         ORDER BY bid_price DESC
         LIMIT 1
     </select>
-
+    <select id="countGoodsBidsByGoodsId">
+        select count(*)
+        from bid b
+        where b.goods_id = #{goodsId}
+    </select>
 </mapper>

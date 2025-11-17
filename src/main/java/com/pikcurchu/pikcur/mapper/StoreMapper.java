@@ -7,6 +7,7 @@ import com.pikcurchu.pikcur.vo.GoodsLike;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StoreMapper {
@@ -33,6 +34,26 @@ public interface StoreMapper {
     void insertStoreReport(ReqStoreReportDto reqStoreReportDto);
 
     void insertStoreBlock(ReqStoreBlockDto reqStoreBlockDto);
+
+    int countReceivedQuestionsByStoreId(Integer storeId);
+
+    int countSentQuestionsByStoreId(Integer storeId);
+
+    int countReviewsByStoreId(Integer storeId);
+
+    int countSellTransactionByStoreId(Integer storeId);
+
+    int countBuyTransactionByStoreId(Integer storeId);
+
+    int countBidsByStoreId(Integer storeId);
+
+    int countBrandLikeByStoreId(Integer storeId);
+
+    int countFollowByStoreId(Integer storeId);
+
+    int countStoreGoodsByStoreId(Integer storeId);
+
+    int countGoodsLikeGoodsByStoreId(Integer storeId);
 
     Integer insertFollow(Integer storeId, Integer memberNo);
 

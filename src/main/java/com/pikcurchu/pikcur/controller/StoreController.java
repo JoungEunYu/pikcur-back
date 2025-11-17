@@ -34,66 +34,73 @@ public class StoreController {
 
     @Operation(summary = "리뷰 리스트 조회", description = "상점 아이디를 통해 상점 리뷰 리스트를 조회")
     @GetMapping("/{storeId}/reviews")
-    public ResponseEntity<List<ResReviewItemDto>> selectStoreReviews(@PathVariable Integer storeId) {
-        List<ResReviewItemDto> reviews = storeService.selectStoreReview(storeId);
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    public ResponseEntity<ResReviewPageDto> selectStoreReviews(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResReviewPageDto reviewPageDto = storeService.selectStoreReview(storeId, currentPage);
+        return new ResponseEntity<>(reviewPageDto, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 리스트 조회", description = "상점 아이디를 통해 상품 리스트를 조회")
     @GetMapping("/{storeId}/goods")
-    public ResponseEntity<List<ResGoodsItemDto>> selectStoreGoods(@PathVariable Integer storeId, HttpServletRequest request) {
+    public ResponseEntity<ResGoodsPageDto> selectStoreGoods(@PathVariable Integer storeId, HttpServletRequest request, @RequestParam int currentPage) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        List<ResGoodsItemDto> goodsList = storeService.selectStoreGoods(storeId, memberNo);
+        ResGoodsPageDto goodsList = storeService.selectStoreGoods(storeId, memberNo, currentPage);
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
     @Operation(summary = "판매한 거래 리스트 조회", description = "판매한 거래 리스트를 조회")
     @GetMapping("/{storeId}/transactions/sell")
-    public ResponseEntity<List<ResTransactionItemDto>> selectStoreSellTransaction(@PathVariable Integer storeId) {
-        List<ResTransactionItemDto> transactions = storeService.selectStoreSellTransaction(storeId);
-        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    public ResponseEntity<ResSellTransactionPageDto> selectStoreSellTransaction(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResSellTransactionPageDto transactionPageDto = storeService.selectStoreSellTransaction(storeId, currentPage);
+        return new ResponseEntity<>(transactionPageDto, HttpStatus.OK);
     }
 
     @Operation(summary = "구매한 거래 리스트 조회", description = "구매한 거래 리스트를 조회")
     @GetMapping("/{storeId}/transactions/buy")
-    public ResponseEntity<List<ResTransactionItemDto>> selectStoreBuyTransaction(@PathVariable Integer storeId) {
-        List<ResTransactionItemDto> transactions = storeService.selectStoreBuyTransaction(storeId);
-        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    public ResponseEntity<ResBuyTransactionPageDto> selectStoreBuyTransaction(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResBuyTransactionPageDto transactionPageDto = storeService.selectStoreBuyTransaction(storeId, currentPage);
+        return new ResponseEntity<>(transactionPageDto, HttpStatus.OK);
     }
 
     @Operation(summary = "입찰 내역 리스트 조회", description = "입찰한 리스트를 조회")
     @GetMapping("/{storeId}/bids")
-    public ResponseEntity<List<ResBidListDto>> selectStoreBids(@PathVariable Integer storeId) {
-        List<ResBidListDto> bids = storeService.selectStoreBids(storeId);
-        return new ResponseEntity<>(bids, HttpStatus.OK);
+    public ResponseEntity<ResBidsPageDto> selectStoreBids(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResBidsPageDto bidsPageDto = storeService.selectStoreBids(storeId, currentPage);
+        return new ResponseEntity<>(bidsPageDto, HttpStatus.OK);
     }
 
     @Operation(summary = "찜 상품 리스트 조회", description = "찜한 상품 리스트를 조회")
     @GetMapping("/{storeId}/goods-likes")
-    public ResponseEntity<List<GoodsLike>> selectGoodsLike(@PathVariable Integer storeId) {
-        List<GoodsLike> goodsLikes = storeService.selectGoodsLike(storeId);
+    public ResponseEntity<ResGoodsPageDto> selectGoodsLike(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResGoodsPageDto goodsLikes = storeService.selectGoodsLike(storeId, currentPage);
         return new ResponseEntity<>(goodsLikes, HttpStatus.OK);
     }
 
     @Operation(summary = "찜 브랜드 리스트 조회", description = "찜한 브랜드 리스트를 조회")
     @GetMapping("/{storeId}/brand-likes")
-    public ResponseEntity<List<ResBrandItemDto>> selectBransLike(@PathVariable Integer storeId) {
-        List<ResBrandItemDto> brands = storeService.selectBransLike(storeId);
-        return new ResponseEntity<>(brands, HttpStatus.OK);
+    public ResponseEntity<ResBrandLikePageDto> selectBrandsLike(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResBrandLikePageDto brandLikePageDto = storeService.selectBrandsLike(storeId, currentPage);
+        return new ResponseEntity<>(brandLikePageDto, HttpStatus.OK);
     }
 
     @Operation(summary = "팔로우 리스트 조회", description = "팔로우한 상점 리스트를 조회")
     @GetMapping("/{storeId}/follows")
-    public ResponseEntity<List<ResFollowItemDto>> selectFollow(@PathVariable Integer storeId) {
-        List<ResFollowItemDto> follows = storeService.selectFollow(storeId);
-        return new ResponseEntity<>(follows, HttpStatus.OK);
+    public ResponseEntity<ResFollowPageDto> selectFollow(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResFollowPageDto followPageDto = storeService.selectFollow(storeId, currentPage);
+        return new ResponseEntity<>(followPageDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "문의 리스트 조회", description = "상점 번호를 통해 받은 상품관련 문의 리스트를 조회")
-    @GetMapping("/{storeId}/questions")
-    public ResponseEntity<List<ResQuestionItemDto>> selectQuestions(@PathVariable Integer storeId) {
-        List<ResQuestionItemDto> questions = storeService.selectQuestions(storeId);
-        return new ResponseEntity<>(questions, HttpStatus.OK);
+    @Operation(summary = "받은 문의 리스트 조회", description = "상점 번호를 통해 받은 상품관련 문의 리스트를 조회")
+    @GetMapping("/{storeId}/questions/received")
+    public ResponseEntity<ResQuestionPageDto> selectReceivedQuestions(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResQuestionPageDto questionPageDto = storeService.selectReceivedQuestions(storeId, currentPage);
+        return new ResponseEntity<>(questionPageDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "보낸 문의 리스트 조회", description = "상점 번호를 통해 보낸 상품관련 문의 리스트를 조회")
+    @GetMapping("/{storeId}/questions/sent")
+    public ResponseEntity<ResQuestionPageDto> selectSentQuestions(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResQuestionPageDto questionPageDto = storeService.selectSentQuestions(storeId, currentPage);
+        return new ResponseEntity<>(questionPageDto, HttpStatus.OK);
     }
 
     @Operation(summary = "상점 신고", description = "상점 번호를 통해 해당 상점 신고")

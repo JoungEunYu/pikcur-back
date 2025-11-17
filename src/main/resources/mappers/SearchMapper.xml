@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pikcurchu.pikcur.mapper.SearchMapper">
-    <select id="selectSearchGoodsList" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsBidListDto">
+    <select id="selectSearchGoodsList" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
         SELECT
         g.goods_id,
         g.category_id,
@@ -34,8 +34,9 @@
         LEFT JOIN Status_master sm
         ON g.status_type = sm.status_type
         AND g.status_no = sm.status_no
-        where g.goods_name LIKE "%#{keyword}%" OR b.brand_name LIKE "%#{keyword}%"
-        ORDER BY g.goods_id DESC;
+        where g.goods_name LIKE CONCAT('%', #{keyword}, '%') OR b.brand_name LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY g.goods_id DESC
+        LIMIT #{limit} OFFSET #{offset};
     </select>
     <select id="selectSearchHistory" resultType="com.pikcurchu.pikcur.dto.response.ResSearchDto">
         select keyword
@@ -50,5 +51,29 @@
         ORDER BY COUNT(*) DESC
         LIMIT 10;
     </select>
-
+    <insert id="insertSearchHistory">
+        INSERT INTO search_history (member_no, keyword)
+        VALUES (#{memberNo}, #{keyword})
+        ON DUPLICATE KEY UPDATE
+        create_date = NOW()
+    </insert>
+    <delete id="deleteOldSearchHistory">
+        DELETE FROM search_history
+        WHERE member_no = #{memberNo}
+        AND create_date NOT IN (
+            SELECT create_date
+            FROM (
+                SELECT create_date
+                FROM search_history
+                WHERE member_no = #{memberNo}
+                ORDER BY create_date DESC LIMIT 20
+            ) AS recent_histories
+        )
+    </delete>
+    <select id="countSearchGoods">
+        select COUNT(*)
+        from goods g
+        join brand b ON g.brand_id = b.brand_id
+        where g.goods_name LIKE CONCAT('%', #{keyword}, '%') OR b.brand_name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
 </mapper>

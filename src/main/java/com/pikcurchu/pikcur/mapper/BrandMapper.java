@@ -5,14 +5,17 @@ import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface BrandMapper {
     ResBrandDetailDto selectBrandDetail(Integer brandId, Integer memberNo);
 
-    List<ResGoodsItemDto> selectBrandGoodsList(Integer brandId, Integer memberNo);
+    List<ResGoodsItemDto> selectBrandGoodsList(Map<String, Object> params);
 
     void insertBrandLike(Integer brandId, Integer memberNo);
 
     void deleteBrandLike(Integer brandId, Integer memberNo);
+
+    int countBrandGoodsByBrandId(Integer brandId);
 }

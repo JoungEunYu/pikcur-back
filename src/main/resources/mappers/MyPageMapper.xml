@@ -50,6 +50,13 @@
         WHERE
             store_id = #{storeId}
     </update>
+    <update id="updateStoreProfilePath">
+        update store
+        set
+            profile = #{uploadedPath}
+        where
+            store_id = #{storeId}
+    </update>
 
     <update id="updatePassword" parameterType="map">
         UPDATE member

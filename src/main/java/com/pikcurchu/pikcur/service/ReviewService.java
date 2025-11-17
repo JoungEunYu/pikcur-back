@@ -4,12 +4,14 @@ import com.pikcurchu.pikcur.dto.request.ReqReviewDto;
 import com.pikcurchu.pikcur.mapper.ReviewMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewMapper reviewMapper;
 
+    @Transactional
     public void insertReview(Integer storeId, ReqReviewDto reqReviewDto, Integer memberNo) {
         reqReviewDto.setStoreId(storeId);
         reqReviewDto.setMemberNo(memberNo);

@@ -40,7 +40,8 @@
         ) glCount ON g.goods_id = glCount.goods_id
         ORDER BY
         COALESCE(glCount.likeCount, 0) DESC,
-        g.create_date DESC;
+        g.create_date DESC
+        limit 8;
     </select>
     <select id="findRecentViewGoodsList" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
         SELECT
@@ -79,7 +80,8 @@
         WHERE member_no = #{memberNo}
         GROUP BY goods_id
         ) gh ON g.goods_id = gh.goods_id
-        ORDER BY gh.goods_id DESC;
+        ORDER BY gh.goods_id DESC
+        limit 8;
 
     </select>
     <select id="findGoodsByAuctionEndAsc" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
@@ -115,7 +117,8 @@
         AND g.status_no = sm.status_no
         order by
         g.auction_end_date asc,
-        g.create_date desc;
+        g.create_date desc
+        limit 8;
     </select>
     <select id="findCategories" resultMap="categoryResultMap">
         SELECT
@@ -167,7 +170,8 @@
         AND g.status_no = sm.status_no
         where g.category_id = #{categoryId}
         order by
-        g.create_date desc;
+        g.create_date desc
+        LIMIT #{limit} OFFSET #{offset};
     </select>
     <select id="findGoodsDetailById" resultMap="GoodsDetailResultMap">
         <![CDATA[
@@ -236,7 +240,7 @@
     GROUP BY g.goods_id;
     ]]>
     </select>
-    <select id="findQuestionsById" >
+    <select id="selectGoodsQuestionsById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsQuestionsDto">
         SELECT
         q.question_id,
         q.title,
@@ -249,7 +253,8 @@
         FROM question q
         left join answer a on a.question_id = q.question_id
         WHERE q.goods_id = #{goodsId}
-        ORDER BY q.create_date DESC;
+        ORDER BY q.create_date DESC
+        LIMIT #{limit} OFFSET #{offset};
     </select>
     <insert id="insertGoodsReport">
         insert into goods_report(goods_id, member_no) values(#{goodsId}, #{memberNo})
@@ -266,7 +271,7 @@
     <update id="updateGoodsView">
         update goods set views = views + 1 where goods_id = #{goodsId}
     </update>
-    <insert id="insertGoods">
+    <insert id="insertGoods" useGeneratedKeys="true" keyProperty="goodsId">
         insert into goods(
         store_id,
         category_id,
@@ -278,7 +283,8 @@
         shipping_price,
         auction_end_date,
         quality,
-        size
+        size,
+        gender
         ) values (
         (SELECT store_id FROM store WHERE member_no = #{memberNo}),
         #{categoryId},
@@ -290,7 +296,8 @@
         #{shippingPrice},
         #{auctionEndDate},
         #{quality},
-        #{size}
+        #{size},
+        #{gender}
         );
     </insert>
     <select id="findExpiredGoods" resultType="com.pikcurchu.pikcur.vo.Goods">
@@ -312,7 +319,23 @@
         SELECT member_no
         FROM store where store_id = #{storeId}
     </select>
-
+    <select id="selectGoodsMemberNo" parameterType="int" resultType="int">
+        SELECT m.member_no
+        FROM goods g
+        JOIN store s ON g.store_id = s.store_id
+        JOIN member m ON s.member_no = m.member_no
+        WHERE g.goods_id = #{goodsId}
+    </select>
+    <select id="countCategoryGoodsById">
+        select count(*)
+        from goods g
+        where g.category_id = #{categoryId};
+    </select>
+    <select id="countSellTransactionByStoreId">
+        select count(*)
+        from question
+        where goods_id = #{goodsId}
+    </select>
     <resultMap id="categoryResultMap" type="com.pikcurchu.pikcur.dto.response.ResCategoryDto">
 
         <id property="categoryId" column="parent_id"/>

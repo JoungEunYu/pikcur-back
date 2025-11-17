@@ -41,14 +41,14 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "회원가입 API")
     @PostMapping("/members/signup")
-    public ResponseEntity<Integer> signup(@RequestBody Member member) {
+    public ResponseEntity<Integer> signup(@RequestBody Member member) { // TODO: 유지보수를 위한 DTO 변경
         int response = authService.insertMember(member.getId()
                 , member.getPassword()
                 , member.getEmail()
                 , member.getName()
                 , member.getPhone()
                 , member.getGender()
-                , member.getBirth());
+                , member.getBirth()); // TODO: service에서 처리하도록
 
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
     }
