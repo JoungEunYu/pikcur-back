@@ -10,5 +10,6 @@
             alarm
         WHERE
             member_no = #{memberNo}
+        and status_no = '01'
     </select>
 </mapper>
