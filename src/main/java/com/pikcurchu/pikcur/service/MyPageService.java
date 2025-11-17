@@ -3,6 +3,7 @@ package com.pikcurchu.pikcur.service;
 import com.pikcurchu.pikcur.dto.response.MyPageInfoDto;
 import com.pikcurchu.pikcur.dto.response.ResMyStoreDto;
 import com.pikcurchu.pikcur.mapper.MyPageMapper;
+import com.pikcurchu.pikcur.util.PasswordUtil;
 import com.pikcurchu.pikcur.vo.Member;
 import com.pikcurchu.pikcur.vo.Store;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class MyPageService {
 
     public int updateMyStore(Store store) {
         return myPageMapper.updateMyStore(store);
+    }
+
+    public Integer updatePassword(Integer memberNo, String password) {
+        String encodedPassword = PasswordUtil.encode(password);
+
+        return myPageMapper.updatePassword(memberNo, encodedPassword);
     }
 
     public void updateStoreProfile(Integer storeId, MultipartFile image) {

@@ -17,5 +17,8 @@ public interface MyPageMapper {
 
     int updateMyStore(Store store);
 
+    int updatePassword(Integer memberNo, String password);
+
+
     void updateStoreProfilePath(Integer storeId, String uploadedPath);
 }

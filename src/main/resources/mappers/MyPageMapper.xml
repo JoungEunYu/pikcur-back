@@ -44,6 +44,7 @@
         UPDATE
             store
         SET
+            profile = #{profile}
         ,   store_name = #{storeName}
         ,   store_info = #{storeInfo}
         WHERE
@@ -55,5 +56,13 @@
             profile = #{uploadedPath}
         where
             store_id = #{storeId}
+    </update>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE member
+        SET
+        password = #{password}
+        ,   update_date = NOW()
+        WHERE member_no = #{memberNo}
     </update>
 </mapper>

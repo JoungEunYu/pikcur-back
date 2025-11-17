@@ -354,4 +354,23 @@
         insert into block(store_id, member_no)
         values(#{storeId}, #{memberNo});
     </insert>
+
+    <insert id="insertFollow" parameterType="map">
+        INSERT INTO
+        follow (
+            store_id
+        ,   member_no
+        )
+        VALUES (
+            #{storeId}
+        ,   #{memberNo}
+        )
+    </insert>
+
+    <delete id="deleteFollow">
+        DELETE FROM
+            follow
+        where
+            follow_id = #{followId}
+    </delete>
 </mapper>

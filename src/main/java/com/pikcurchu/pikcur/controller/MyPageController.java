@@ -66,4 +66,17 @@ public class MyPageController {
 
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
     }
+
+    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
+    @PostMapping("/password")
+    public ResponseEntity<Integer> updatePassword(@RequestBody Member member, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        int response = myPageService.updatePassword(memberNo, member.getPassword());
+        if (response > 0) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
 }

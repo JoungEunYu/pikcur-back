@@ -30,7 +30,15 @@ public class JwtFilterConfig {
                 "/bid/*/**",
                 "/question/*/**",
                 "/review/*",
-                "/transactions/*/**"
+                "/transactions/*/**",
+                "/mypage/address",
+                "/mypage/address/*",
+                "/mypage/account",
+                "/mypage/account/*",
+                "/mypage/blocked-stores",
+                "/mypage/blocked-stores/*",
+                "/store/follow/*",
+                "/alarm"
         );
         registration.setOrder(1);
         return registration;

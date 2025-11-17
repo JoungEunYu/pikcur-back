@@ -13,25 +13,23 @@ import java.util.Map;
 public interface StoreMapper {
     ResStoreDetailDto findStoreInfoById(Integer storeId, Integer currentMemberNo);
 
-    List<ResReviewItemDto> findStoreReviewById(Map<String, Object> params);
+    List<ResReviewItemDto> findStoreReviewById(Integer storeId);
 
-    List<ResGoodsItemDto> findStoreGoodsById(Map<String, Object> params);
+    List<ResGoodsItemDto> findStoreGoodsById(Integer storeId, Integer currentMemberNo);
 
-    List<ResTransactionItemDto> findStoreSellTranactionById(Map<String, Object> params);
+    List<ResTransactionItemDto> findStoreSellTranactionById(Integer storeId);
 
-    List<ResTransactionItemDto> findStoreBuyTranactionById(Map<String, Object> params);
+    List<ResTransactionItemDto> findStoreBuyTranactionById(Integer storeId);
 
-    List<ResBidItemDto> findBidById(Map<String, Object> params);
+    List<ResBidListDto> findBidById(Integer storeId);
 
-    List<ResGoodsItemDto> findGoodsLikeById(Map<String, Object> params);
+    List<GoodsLike> findGoodsLikeById(Integer storeId);
 
-    List<ResBrandItemDto> findBrandLikeById(Map<String, Object> params);
+    List<ResBrandItemDto> findBrandLikeById(Integer storeId);
 
-    List<ResFollowItemDto> findFollowById(Map<String, Object> params);
+    List<ResFollowItemDto> findFollowById(Integer storeId);
 
-    List<ResQuestionItemDto> selectReceivedQuestions(Map<String, Object> params);
-
-    List<ResQuestionItemDto> selectSentQuestions(Map<String, Object> params);
+    List<ResQuestionItemDto> findQuestionById(Integer storeId);
 
     void insertStoreReport(ReqStoreReportDto reqStoreReportDto);
 
@@ -56,4 +54,8 @@ public interface StoreMapper {
     int countStoreGoodsByStoreId(Integer storeId);
 
     int countGoodsLikeGoodsByStoreId(Integer storeId);
+
+    Integer insertFollow(Integer storeId, Integer memberNo);
+
+    Integer deleteFollow(Integer followId);
 }
