@@ -1,15 +1,15 @@
 package com.pikcurchu.pikcur.mapper;
 
 import com.pikcurchu.pikcur.dto.request.ReqGoodsDto;
-import com.pikcurchu.pikcur.dto.request.ReqGoodsReportDto;
-import com.pikcurchu.pikcur.dto.response.QuestionInfo;
 import com.pikcurchu.pikcur.dto.response.ResCategoryDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsDetailDto;
+import com.pikcurchu.pikcur.dto.response.ResGoodsQuestionsDto;
 import com.pikcurchu.pikcur.vo.Goods;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface GoodsMapper {
@@ -21,11 +21,11 @@ public interface GoodsMapper {
 
     List<ResCategoryDto> findCategories();
 
-    List<ResGoodsItemDto> findGoodsListByCategoryId(Integer categoryId, Integer memberNo);
+    List<ResGoodsItemDto> findGoodsListByCategoryId(Map<String, Object> params);
 
     ResGoodsDetailDto findGoodsDetailById(Integer goodsId, Integer memberNo);
 
-    List<QuestionInfo> findQuestionsById(Integer goodsId);
+    List<ResGoodsQuestionsDto> selectGoodsQuestionsById(Map<String, Object> params);
 
     void insertGoodsReport(Integer goodsId, Integer memberNo);
 
@@ -43,5 +43,11 @@ public interface GoodsMapper {
 
     void updateGoodsStatus(String statusNo, Integer goodsId);
 
-    Integer findMemberNoOfStore(Integer storeId);
+    Integer selectMemberNoOfStore(Integer storeId);
+
+    Integer selectGoodsMemberNo(Integer goodsId);
+
+    int countCategoryGoodsById(Integer categoryId);
+
+    int countSellTransactionByStoreId(Integer goodsId);
 }

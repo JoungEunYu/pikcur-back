@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class ReqAnswerDto {
+    private Integer answerId;
     private Integer questionId;
     private Integer memberNo;
     private String title;

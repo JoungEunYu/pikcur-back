@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
-public class ResGoodsBidListDto {
+public class ResGoodsBidItemDto {
     private Integer bidId;
     private String memberId;
     private Integer bidPrice;

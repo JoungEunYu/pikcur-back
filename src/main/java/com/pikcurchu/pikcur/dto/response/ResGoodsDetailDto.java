@@ -25,5 +25,4 @@ public class ResGoodsDetailDto {
     private String statusName;
     private String goodsInfo;
     private StoreInfo storeInfo;
-    private List<QuestionInfo> questions;
 }

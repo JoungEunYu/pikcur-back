@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
-public class QuestionInfo {
+public class ResGoodsQuestionsDto {
     private Integer questionId;
     private boolean isAnswer;
     private String title;

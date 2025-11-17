@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @Tag(name="question api", description = "문의 관련 api")
@@ -22,17 +23,28 @@ public class QuestionController {
 
     @Operation(summary = "문의 등록", description = "문의 객체를 받아 등록")
     @PostMapping
-    public ResponseEntity<Void> insertQuestion(@RequestBody ReqQuestionDto questionDto, HttpServletRequest request) {
+    public ResponseEntity<Void> insertQuestion(@RequestPart("questionData") ReqQuestionDto questionDto,
+                                               @RequestPart(required = false) MultipartFile image,
+                                               HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        questionService.insertQuestion(questionDto, memberNo);
+        Integer questionId = questionService.insertQuestion(questionDto, memberNo);
+        if(image != null && !image.isEmpty()) {
+            questionService.insertQuestionImage(questionId, image);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "답변 등록", description = "답변 객체를 받아 등록")
     @PostMapping("/{questionId}/answer")
-    public ResponseEntity<Void> insertAnswer(@PathVariable Integer questionId, @RequestBody ReqAnswerDto answerDto, HttpServletRequest request) {
+    public ResponseEntity<Void> insertAnswer(@PathVariable Integer questionId,
+                                             @RequestPart ReqAnswerDto answerDto,
+                                             @RequestPart(required = false) MultipartFile image,
+                                             HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        questionService.insertAnswer(questionId, answerDto, memberNo);
+        Integer answerId = questionService.insertAnswer(questionId, answerDto, memberNo);
+        if(image != null && !image.isEmpty()) {
+            questionService.insertAnswerImage(answerId, image);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

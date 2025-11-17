@@ -7,30 +7,53 @@ import com.pikcurchu.pikcur.vo.GoodsLike;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StoreMapper {
     ResStoreDetailDto findStoreInfoById(Integer storeId, Integer currentMemberNo);
 
-    List<ResReviewItemDto> findStoreReviewById(Integer storeId);
+    List<ResReviewItemDto> findStoreReviewById(Map<String, Object> params);
 
-    List<ResGoodsItemDto> findStoreGoodsById(Integer storeId, Integer currentMemberNo);
+    List<ResGoodsItemDto> findStoreGoodsById(Map<String, Object> params);
 
-    List<ResTransactionItemDto> findStoreSellTranactionById(Integer storeId);
+    List<ResTransactionItemDto> findStoreSellTranactionById(Map<String, Object> params);
 
-    List<ResTransactionItemDto> findStoreBuyTranactionById(Integer storeId);
+    List<ResTransactionItemDto> findStoreBuyTranactionById(Map<String, Object> params);
 
-    List<ResBidListDto> findBidById(Integer storeId);
+    List<ResBidItemDto> findBidById(Map<String, Object> params);
 
-    List<GoodsLike> findGoodsLikeById(Integer storeId);
+    List<ResGoodsItemDto> findGoodsLikeById(Map<String, Object> params);
 
-    List<ResBrandItemDto> findBrandLikeById(Integer storeId);
+    List<ResBrandItemDto> findBrandLikeById(Map<String, Object> params);
 
-    List<ResFollowItemDto> findFollowById(Integer storeId);
+    List<ResFollowItemDto> findFollowById(Map<String, Object> params);
 
-    List<ResQuestionItemDto> findQuestionById(Integer storeId);
+    List<ResQuestionItemDto> selectReceivedQuestions(Map<String, Object> params);
+
+    List<ResQuestionItemDto> selectSentQuestions(Map<String, Object> params);
 
     void insertStoreReport(ReqStoreReportDto reqStoreReportDto);
 
     void insertStoreBlock(ReqStoreBlockDto reqStoreBlockDto);
+
+    int countReceivedQuestionsByStoreId(Integer storeId);
+
+    int countSentQuestionsByStoreId(Integer storeId);
+
+    int countReviewsByStoreId(Integer storeId);
+
+    int countSellTransactionByStoreId(Integer storeId);
+
+    int countBuyTransactionByStoreId(Integer storeId);
+
+    int countBidsByStoreId(Integer storeId);
+
+    int countBrandLikeByStoreId(Integer storeId);
+
+    int countFollowByStoreId(Integer storeId);
+
+    int countStoreGoodsByStoreId(Integer storeId);
+
+    int countGoodsLikeGoodsByStoreId(Integer storeId);
 }

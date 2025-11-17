@@ -2,9 +2,7 @@ package com.pikcurchu.pikcur.controller;
 
 import com.pikcurchu.pikcur.dto.request.ReqGoodsDto;
 import com.pikcurchu.pikcur.dto.request.ReqGoodsReportDto;
-import com.pikcurchu.pikcur.dto.response.ResCategoryDto;
-import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
-import com.pikcurchu.pikcur.dto.response.ResGoodsDetailDto;
+import com.pikcurchu.pikcur.dto.response.*;
 import com.pikcurchu.pikcur.service.GoodsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -56,9 +55,9 @@ public class GoodsController {
 
     @Operation(summary = "카테고리 별 상품 조회", description = "카테고리 아이디를 통한 상품 리스트 조회")
     @GetMapping("/categories/{categoryId}")
-    public ResponseEntity<List<ResGoodsItemDto>> selectGoodsListByCategoryId(@PathVariable Integer categoryId, HttpServletRequest request) {
+    public ResponseEntity<ResGoodsPageDto> selectGoodsListByCategoryId(@PathVariable Integer categoryId, HttpServletRequest request, @RequestParam int currentPage) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        List<ResGoodsItemDto> goodsList = goodsService.selectGoodsListByCategoryId(categoryId, memberNo);
+        ResGoodsPageDto goodsList = goodsService.selectGoodsListByCategoryId(categoryId, memberNo, currentPage);
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
@@ -68,6 +67,13 @@ public class GoodsController {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
         ResGoodsDetailDto goodsDetail = goodsService.selectGoodsDetailById(goodsId, memberNo);
         return new ResponseEntity<>(goodsDetail, HttpStatus.OK);
+    }
+
+    @Operation(summary = "상품 문의 리스트 조회", description = "상품 아이디를 통한 상품 문의 리스트 조회")
+    @GetMapping("/{goodsId}/questions")
+    public ResponseEntity<ResGoodsQuestionsPageDto> selectGoodsQuestionsById(@PathVariable Integer goodsId, @RequestParam int currentPage) {
+        ResGoodsQuestionsPageDto goodsQuestions = goodsService.selectGoodsQuestionsById(goodsId, currentPage);
+        return new ResponseEntity<>(goodsQuestions, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 신고", description = "상품 번호를 통해 해당 상품 신고")
@@ -95,9 +101,15 @@ public class GoodsController {
 
     @Operation(summary = "상품 등록", description = "경매 상품 등록")
     @PostMapping
-    public ResponseEntity<Void> insertGoods(@RequestBody ReqGoodsDto reqGoodsDto,HttpServletRequest request) {
+    public ResponseEntity<Void> insertGoods(@RequestPart("goodsData") ReqGoodsDto reqGoodsDto,
+                                            @RequestPart("images") List<MultipartFile> images, HttpServletRequest request) {
+
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        goodsService.insertGoods(reqGoodsDto, memberNo);
+        Integer goodsId = goodsService.insertGoods(reqGoodsDto, memberNo);
+        if(images.isEmpty() || images == null) {
+            throw new IllegalArgumentException("이미지는 최소 1장 이상 필요합니다.");
+        }
+        goodsService.insertGoodsImages(goodsId, images);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

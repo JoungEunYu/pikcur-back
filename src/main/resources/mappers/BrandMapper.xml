@@ -52,7 +52,8 @@
         g.auction_end_date,
         g.create_date,
         sm.status_name
-        order by g.create_date desc;
+        order by g.create_date desc
+        LIMIT #{limit} OFFSET #{offset};
     </select>
     <insert id="insertBrandLike">
         insert into brand_like(brand_id, member_no) values(#{brandId}, #{memberNo});
@@ -60,4 +61,9 @@
     <delete id="deleteBrandLike">
         delete from brand_like where brand_id = #{brandId} and member_no = #{memberNo};
     </delete>
+    <select id="countBrandGoodsByBrandId">
+        select count(*)
+        from goods g
+        where g.brand_id = #{brandId};
+    </select>
 </mapper>

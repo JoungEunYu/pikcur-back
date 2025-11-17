@@ -1,6 +1,7 @@
 package com.pikcurchu.pikcur.controller;
 
 import com.pikcurchu.pikcur.dto.response.ResGoodsBidListDto;
+import com.pikcurchu.pikcur.dto.response.ResGoodsPageDto;
 import com.pikcurchu.pikcur.dto.response.ResSearchDto;
 import com.pikcurchu.pikcur.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,10 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,10 +22,10 @@ public class SearchController {
     private final SearchService searchService;
 
     @Operation(summary = "검색어 키워드 조회", description = "키워드를 통한 상품 리스트 조회")
-    @GetMapping("/goods")
-    public ResponseEntity<List<ResGoodsBidListDto>> selectSearchGoodsList(@PathVariable String keyword, HttpServletRequest request) {
+    @GetMapping
+    public ResponseEntity<ResGoodsPageDto> selectSearchGoodsList(@RequestParam String keyword, HttpServletRequest request, @RequestParam int currentPage) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        List<ResGoodsBidListDto> searchList = searchService.selectSearchGoodsList(keyword, memberNo);
+        ResGoodsPageDto searchList = searchService.selectSearchGoodsList(keyword, memberNo, currentPage);
         return new ResponseEntity<>(searchList, HttpStatus.OK);
     }
 

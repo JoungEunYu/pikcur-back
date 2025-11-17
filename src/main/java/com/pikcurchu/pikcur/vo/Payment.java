@@ -1,16 +1,16 @@
 package com.pikcurchu.pikcur.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Payment {
-    private Integer paymentId;
+//    private Integer paymentId;
+    private String paymentId;
     private Integer transactionId;
     private String paymentMethod;
     private Integer paymentPrice;

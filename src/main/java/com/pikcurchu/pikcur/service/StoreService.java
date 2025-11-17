@@ -7,11 +7,17 @@ import com.pikcurchu.pikcur.mapper.StoreMapper;
 import com.pikcurchu.pikcur.vo.GoodsLike;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StoreService {
+
+    // TODO: 공통 로직 분리하기
     private final StoreMapper storeMapper;
+    private static final int PAGE_SIZE_6  = 6;
+    private static final int PAGE_SIZE_21  = 21;
 
     public StoreService(StoreMapper storeMapper) {
         this.storeMapper = storeMapper;
@@ -25,40 +31,207 @@ public class StoreService {
         return storeDto;
     }
 
-    public List<ResReviewItemDto> selectStoreReview(Integer storeId) {
-        return storeMapper.findStoreReviewById(storeId);
+    public ResReviewPageDto selectStoreReview(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResReviewItemDto> reviewList = storeMapper.findStoreReviewById(params);
+        int totalCount = storeMapper.countReviewsByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResReviewPageDto(reviewList, totalPages, totalCount);
     }
 
-    public List<ResGoodsItemDto> selectStoreGoods(Integer storeId, Integer memberNo) {
-        return storeMapper.findStoreGoodsById(storeId, memberNo);
+    public ResGoodsPageDto selectStoreGoods(Integer storeId, Integer memberNo, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_21;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("memberNo", memberNo);
+        params.put("limit", PAGE_SIZE_21);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResGoodsItemDto> goodsList = storeMapper.findStoreGoodsById(params);
+        int totalCount = storeMapper.countStoreGoodsByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_21);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResGoodsPageDto(goodsList, totalPages, totalCount);
     }
 
-    public List<ResTransactionItemDto> selectStoreSellTransaction(Integer storeId) {
-        return storeMapper.findStoreSellTranactionById(storeId);
+    public ResSellTransactionPageDto selectStoreSellTransaction(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResTransactionItemDto> transList = storeMapper.findStoreSellTranactionById(params);
+        int totalCount = storeMapper.countSellTransactionByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResSellTransactionPageDto(transList, totalPages, totalCount);
     }
 
-    public List<ResTransactionItemDto> selectStoreBuyTransaction(Integer storeId) {
-        return storeMapper.findStoreBuyTranactionById(storeId);
+    public ResBuyTransactionPageDto selectStoreBuyTransaction(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResTransactionItemDto> transList = storeMapper.findStoreBuyTranactionById(params);
+        int totalCount = storeMapper.countBuyTransactionByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResBuyTransactionPageDto(transList, totalPages, totalCount);
     }
 
-    public List<ResBidListDto> selectStoreBids(Integer storeId) {
-        return storeMapper.findBidById(storeId);
+    public ResBidsPageDto selectStoreBids(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResBidItemDto> bidList = storeMapper.findBidById(params);
+        int totalCount = storeMapper.countBidsByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResBidsPageDto(bidList, totalPages, totalCount);
     }
 
-    public List<GoodsLike> selectGoodsLike(Integer storeId) {
-        return storeMapper.findGoodsLikeById(storeId);
+    public ResGoodsPageDto selectGoodsLike(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_21;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_21);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResGoodsItemDto> goodsList = storeMapper.findGoodsLikeById(params);
+        int totalCount = storeMapper.countGoodsLikeGoodsByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_21);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResGoodsPageDto(goodsList, totalPages, totalCount);
     }
 
-    public List<ResBrandItemDto> selectBransLike(Integer storeId) {
-        return storeMapper.findBrandLikeById(storeId);
+    public ResBrandLikePageDto selectBrandsLike(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResBrandItemDto> brandLikeList = storeMapper.findBrandLikeById(params);
+        int totalCount = storeMapper.countBrandLikeByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResBrandLikePageDto(brandLikeList, totalPages, totalCount);
     }
 
-    public List<ResFollowItemDto> selectFollow(Integer storeId) {
-        return storeMapper.findFollowById(storeId);
+    public ResFollowPageDto selectFollow(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResFollowItemDto> followList = storeMapper.findFollowById(params);
+        int totalCount = storeMapper.countFollowByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResFollowPageDto(followList, totalPages, totalCount);
     }
 
-    public List<ResQuestionItemDto> selectQuestions(Integer storeId) {
-        return storeMapper.findQuestionById(storeId);
+    public ResQuestionPageDto selectReceivedQuestions(Integer storeId, int currentPage) {
+        // 1. offset 계산
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResQuestionItemDto> qnaList = storeMapper.selectReceivedQuestions(params);
+        int totalCount = storeMapper.countReceivedQuestionsByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResQuestionPageDto(qnaList, totalPages, totalCount);
+    }
+
+    public ResQuestionPageDto selectSentQuestions(Integer storeId, int currentPage) {
+        // 1. offset 계산
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResQuestionItemDto> qnaList = storeMapper.selectSentQuestions(params);
+        int totalCount = storeMapper.countSentQuestionsByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResQuestionPageDto(qnaList, totalPages, totalCount);
     }
 
     public void reportStore(Integer storeId, ReqStoreReportDto reqStoreReportDto, Integer memberNo) {

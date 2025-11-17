@@ -63,6 +63,10 @@
         INSERT INTO Transactions (buyer_no, seller_no, goods_id, price)
         VALUES (#{buyerNo}, #{sellerNo}, #{goodsId}, #{bidPrice});
     </insert>
+    <insert id="insertTranaction" useGeneratedKeys="true" keyProperty="transactionId">
+        insert into transactions(buyer_no, seller_no, goods_id, price)
+        values(#{buyerNo}, #{sellerNo}, #{goodsId}, #{price});
+    </insert>
 
     <resultMap id="transactionInfoResultMap" type="com.pikcurchu.pikcur.dto.response.ResTransactionDetailDto">
 

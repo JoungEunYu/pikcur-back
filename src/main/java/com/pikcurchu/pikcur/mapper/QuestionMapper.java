@@ -12,4 +12,8 @@ public interface QuestionMapper {
     void insertAnswer(ReqAnswerDto answerDto);
 
     ResQuestionDetailDto findQuestionDetailById(Integer questionId);
+
+    void updateQuestionImagePath(Integer questionId, String uploadedPath);
+
+    void updateAnswerImagePath(Integer answerId, String uploadedPath);
 }

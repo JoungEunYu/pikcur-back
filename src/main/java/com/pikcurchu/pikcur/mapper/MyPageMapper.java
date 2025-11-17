@@ -16,4 +16,6 @@ public interface MyPageMapper {
     ResMyStoreDto selectMyStore(Integer memberNo);
 
     int updateMyStore(Store store);
+
+    void updateStoreProfilePath(Integer storeId, String uploadedPath);
 }

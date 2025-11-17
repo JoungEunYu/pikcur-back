@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name="mypage api", description = "마이페이지 관련 API")
 @RestController
@@ -56,8 +57,12 @@ public class MyPageController {
 
     @Operation(summary = "내상점 수정", description = "내 상점 수정 API")
     @PutMapping("/store")
-    public ResponseEntity<Integer> updateMyStore(@RequestBody Store store) {
+    public ResponseEntity<Integer> updateMyStore(@RequestPart Store store,
+                                                 @RequestPart(required = false) MultipartFile image) {
         Integer response = myPageService.updateMyStore(store);
+        if(image != null && !image.isEmpty()) {
+            myPageService.updateStoreProfile(store.getStoreId(), image);
+        }
 
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
     }
