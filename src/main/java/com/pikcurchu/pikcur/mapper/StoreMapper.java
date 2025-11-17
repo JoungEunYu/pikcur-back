@@ -33,4 +33,8 @@ public interface StoreMapper {
     void insertStoreReport(ReqStoreReportDto reqStoreReportDto);
 
     void insertStoreBlock(ReqStoreBlockDto reqStoreBlockDto);
+
+    Integer insertFollow(Integer storeId, Integer memberNo);
+
+    Integer deleteFollow(Integer followId);
 }

@@ -50,4 +50,12 @@
         WHERE
             store_id = #{storeId}
     </update>
+
+    <update id="updatePassword" parameterType="map">
+        UPDATE member
+        SET
+        password = #{password}
+        ,   update_date = NOW()
+        WHERE member_no = #{memberNo}
+    </update>
 </mapper>
