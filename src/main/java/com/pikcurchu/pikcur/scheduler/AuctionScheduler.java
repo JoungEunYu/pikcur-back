@@ -11,9 +11,20 @@ public class AuctionScheduler {
 
     private final AuctionService auctionService;
 
-    @Scheduled(fixedRate = 60000) // 1분마다
-    public void runAuctionCheck() {
+    /**
+     * 경매 종료 체크
+     */
+    @Scheduled(fixedRate = 1 * 60 * 1000) // 1분마다
+    public void checkExpired() {
         auctionService.processExpiredAuctions();
+    }
+
+    /**
+     * 낙찰 - 미결제자 체크
+     */
+    @Scheduled(fixedRate = 60 * 60 * 1000) // 1시간마다
+    public void checkUnpaid() {
+        auctionService.processUnpaidBids();
     }
 }
 
