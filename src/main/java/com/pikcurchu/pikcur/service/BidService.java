@@ -41,7 +41,7 @@ public class BidService {
         reqBidDto.setGoodsId(goodsId);
         reqBidDto.setMemberNo(memberNo);
         bidMapper.insertBid(reqBidDto);
-        bidMapper.updateBidStatus("02", reqBidDto.getGoodsId(), reqBidDto.getBidId());
+//        bidMapper.updateBidStatus("02", reqBidDto.getGoodsId(), reqBidDto.getBidId());
 
     }
 }

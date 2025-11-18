@@ -2,8 +2,10 @@ package com.pikcurchu.pikcur.controller;
 
 import com.pikcurchu.pikcur.dto.request.ReqVerifyPaymentDto;
 import com.pikcurchu.pikcur.dto.response.ResVerifyPaymentDto;
+import com.pikcurchu.pikcur.mapper.TransactionsMapper;
 import com.pikcurchu.pikcur.service.PaymentService;
 // ... (다른 import)
+import com.pikcurchu.pikcur.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,8 +23,8 @@ public class PaymentController {
 
     @Operation(summary = "결제 검증 요청", description = "결제 검증 로직")
     @PostMapping("/verify")
-    public ResponseEntity<ResVerifyPaymentDto> verifyPayment(@RequestBody ReqVerifyPaymentDto dto){
-        Integer memberNo = 6;
+    public ResponseEntity<ResVerifyPaymentDto> verifyPayment(@RequestBody ReqVerifyPaymentDto dto, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
         try {
             // 1. 서비스 호출을 try 블록으로 감쌉니다.
             boolean isValid = paymentService.verifyPayment(dto, memberNo);

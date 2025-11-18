@@ -19,4 +19,8 @@ public interface BidMapper {
     Bid findTopBidder(Integer goodsId);
 
     int countGoodsBidsByGoodsId(Integer goodsId);
+
+    List<Bid> findUnpaidWinners();
+
+    Bid findNextBidder(Integer goodsId);
 }
