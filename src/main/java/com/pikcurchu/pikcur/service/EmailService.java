@@ -33,8 +33,8 @@ public class EmailService {
         return String.valueOf(code);
     }
 
-    public ApiResponse<Void> sendVerificationCode(String email) {
-        if (selectEmail(email)) {
+    public ApiResponse<Void> sendVerificationCode(String email, boolean checkDuplicate) {
+        if (checkDuplicate && selectEmail(email)) {
             return ApiResponse.fail(
                     ResponseCode.DUPLICATE.getCode(),
                     ResponseCode.DUPLICATE.getMessage(),

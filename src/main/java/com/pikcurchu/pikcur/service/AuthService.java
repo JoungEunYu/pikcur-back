@@ -1,9 +1,12 @@
 package com.pikcurchu.pikcur.service;
 
+import com.pikcurchu.pikcur.common.ApiResponse;
+import com.pikcurchu.pikcur.common.ResponseCode;
 import com.pikcurchu.pikcur.enums.Gender;
 import com.pikcurchu.pikcur.mapper.AuthMapper;
 import com.pikcurchu.pikcur.util.PasswordUtil;
 import com.pikcurchu.pikcur.vo.Member;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,28 +36,32 @@ public class AuthService {
     }
 
     @Transactional
-    public int insertMember(String id, String password, String email, String name, String phone, Gender gender, LocalDate birth) {
-        Member member = new Member();
-        member.setId(id);
-        member.setPassword(PasswordUtil.encode(password));;
-        member.setEmail(email);
-        member.setName(name);
-        member.setPhone(phone);
-        member.setGender(gender);
-        member.setBirth(birth);
+    public int insertMember(Member member) {
+
+        member.setPassword(PasswordUtil.encode(member.getPassword()));
 
         int result = authMapper.insertMember(member);
 
         if (result > 0 && member.getMemberNo() != null) {
-            String storeName = name + "님의 상점";
+            String storeName = member.getName() + "님의 상점";
             result += authMapper.insertStore(member.getMemberNo(), storeName);
         }
 
         return result;
     }
 
-    public String findIdByEmail(String email) {
-        return authMapper.findIdByEmail(email);
+    public ApiResponse<String> findIdByEmail(String email) {
+        String id = authMapper.findIdByEmail(email);
+
+        if (id == null || id.isEmpty()) {
+            return ApiResponse.fail(
+                    ResponseCode.NOT_FOUND.getCode(),
+                    ResponseCode.NOT_FOUND.getMessage(),
+                    HttpServletResponse.SC_NOT_FOUND
+            );
+        }
+
+        return ApiResponse.success(id);
     }
 
     public boolean updateMemberToWithdrawal(Integer memberNo) {
@@ -66,10 +73,16 @@ public class AuthService {
         return authMapper.countById(id);
     }
 
-    public Integer updatePassword(Integer memberNo, String password) {
+    public Integer updatePasswordStatusLogin(Integer memberNo, String password) {
         String encodedPassword = PasswordUtil.encode(password);
 
-        return authMapper.updatePassword(memberNo, encodedPassword);
+        return authMapper.updatePasswordStatusLogin(memberNo, encodedPassword);
+    }
+
+    public Integer updatePasswordStatusUnLogin(String id, String password) {
+        String encodedPassword = PasswordUtil.encode(password);
+
+        return authMapper.updatePasswordStatusUnLogin(id, encodedPassword);
     }
 
     public int insertStore(Integer memberNo, String storeName) {

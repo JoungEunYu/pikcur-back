@@ -15,7 +15,9 @@ public interface AuthMapper {
 
     int countById(String id);
 
-    int updatePassword(Integer memberNo, String password);
+    int updatePasswordStatusLogin(Integer memberNo, String password);
+
+    int updatePasswordStatusUnLogin(String id, String password);
 
     int insertStore(Integer memberNo, String storeName);
 }
