@@ -40,6 +40,7 @@
     </select>
     <select id="findStoreReviewById" resultType="com.pikcurchu.pikcur.dto.response.ResReviewItemDto">
         SELECT
+        s.profile as src,
         m.name as memberName,
         r.rating,
         r.content,
@@ -48,17 +49,37 @@
         from review r
         join
             member m on r.member_no = m.member_no
+        join store s on s.member_no = m.member_no
         left join
             review_choice_map rm on r.review_id = rm.review_id
         left join
             review_choice rc on rc.review_choice_id = rm.review_choice_id
-        where store_id = #{storeId}
+        where r.store_id = #{storeId}
         group by r.review_id
         order by r.create_date desc
         LIMIT #{limit} OFFSET #{offset};
     </select>
+    <select id="findStoreReviewRatingAverage" resultType="com.pikcurchu.pikcur.dto.response.ResStoreAverageDto">
+        SELECT
+        s.store_id,
+        s.store_name,
+        IFNULL(AVG(r.rating), 0.0) AS averRating
+
+        FROM
+        store s
+
+        LEFT JOIN
+        review r ON s.store_id = r.store_id
+
+        WHERE
+        s.store_id = #{storeId}
+
+        GROUP BY
+        s.store_id;
+    </select>
     <select id="findStoreGoodsById" resultType="com.pikcurchu.pikcur.dto.response.ResGoodsItemDto">
         SELECT
+        i.image_path,
         g.goods_id,
         g.category_id,
         g.brand_id,
@@ -67,31 +88,25 @@
         g.start_price,
         g.auction_end_date,
         g.create_date,
+        MAX(b.bid_price) as bidPrice,
         COUNT(b.goods_id) as bidCount,
         case
         when gl.goods_like_id is not null then true
         else false
         end as isLiked,
-        sm.status_name
+        g.gender,
+        g.status_no
         from goods g
+        left join
+        image i on g.goods_id = i.goods_id AND i.sort = 1
         left join
         bid b on g.goods_id = b.goods_id
         left join
         goods_like gl on gl.goods_id = g.goods_id
-        and gl.member_no = #{currentMemberNo}
-        left join
-        Status_master sm ON g.status_no = sm.status_no AND g.status_type = sm.status_type
+        and gl.member_no = #{memberNo}
         where g.store_id = #{storeId}
         GROUP BY
-        g.goods_id,
-        g.category_id,
-        g.brand_id,
-        g.goods_name,
-        g.buyout_price,
-        g.start_price,
-        g.auction_end_date,
-        g.create_date,
-        sm.status_name
+        g.goods_id
         order by g.create_date desc
         LIMIT #{limit} OFFSET #{offset};
     </select>

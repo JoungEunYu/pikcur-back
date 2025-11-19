@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResReviewItemDto {
+    private String src;
     private String memberName;
     private float rating;
     private String content;

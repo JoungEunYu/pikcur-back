@@ -8,6 +8,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ResReviewPageDto {
     private List<ResReviewItemDto> reviewList;
+    private ResStoreAverageDto storeAverRating;
     private int totalPages;
     private int totalCount;
 }

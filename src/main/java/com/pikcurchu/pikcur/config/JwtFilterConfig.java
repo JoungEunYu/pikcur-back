@@ -23,8 +23,8 @@ public class JwtFilterConfig {
                 "/auth/members/password",
                 "/mypage/profile",
                 "/mypage/store",
-                "/goods/*/report",
-                "/goods/*/like",
+                "/goods/report/*",
+                "/goods/like/*",
                 "/goods",
                 "/brand/*/like",
                 "/bid/*/**",
@@ -54,7 +54,8 @@ public class JwtFilterConfig {
                 "/brand/*",
                 "/brand/*/goods",
                 "/search/recent",
-                "/search/goods");
+                "/search/goods",
+                "/store/goods/*");
         registration.setOrder(2);
         return registration;
     }

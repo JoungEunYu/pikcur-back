@@ -42,13 +42,14 @@ public class StoreService {
 
         // 3. 쿼리 2개 호출
         List<ResReviewItemDto> reviewList = storeMapper.findStoreReviewById(params);
+        ResStoreAverageDto storeAverRating = storeMapper.findStoreReviewRatingAverage(storeId);
         int totalCount = storeMapper.countReviewsByStoreId(storeId);
 
         // 4. 총 페이지 수 계산
         int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
 
         // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
-        return new ResReviewPageDto(reviewList, totalPages, totalCount);
+        return new ResReviewPageDto(reviewList, storeAverRating, totalPages, totalCount);
     }
 
     public ResGoodsPageDto selectStoreGoods(Integer storeId, Integer memberNo, int currentPage) {

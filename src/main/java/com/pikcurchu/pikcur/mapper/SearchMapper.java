@@ -1,6 +1,5 @@
 package com.pikcurchu.pikcur.mapper;
 
-import com.pikcurchu.pikcur.dto.response.ResGoodsBidListDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsItemDto;
 import com.pikcurchu.pikcur.dto.response.ResSearchDto;
 import org.apache.ibatis.annotations.Mapper;

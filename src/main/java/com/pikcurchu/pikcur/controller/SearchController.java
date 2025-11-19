@@ -1,6 +1,5 @@
 package com.pikcurchu.pikcur.controller;
 
-import com.pikcurchu.pikcur.dto.response.ResGoodsBidListDto;
 import com.pikcurchu.pikcur.dto.response.ResGoodsPageDto;
 import com.pikcurchu.pikcur.dto.response.ResSearchDto;
 import com.pikcurchu.pikcur.service.SearchService;

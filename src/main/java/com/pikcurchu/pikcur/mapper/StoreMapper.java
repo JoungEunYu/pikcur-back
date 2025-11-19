@@ -15,6 +15,8 @@ public interface StoreMapper {
 
     List<ResReviewItemDto> findStoreReviewById(Map<String, Object> params);
 
+    ResStoreAverageDto findStoreReviewRatingAverage(Integer storeId);
+
     List<ResGoodsItemDto> findStoreGoodsById(Map<String, Object> params);
 
     List<ResTransactionItemDto> findStoreSellTranactionById(Map<String, Object> params);
