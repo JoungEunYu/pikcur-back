@@ -26,12 +26,22 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    @Operation(summary = "인증번호 요청 API", description = "인증번호 발송 요청")
-    @PostMapping("/email/send-code")
-    public ResponseEntity<ApiResponse<Void>> sendCode(@RequestBody ReqEmailDto reqEmailDto) {
+    @Operation(summary = "회원가입용 인증번호 요청 API", description = "회원가입 시 인증번호 발송 요청 (중복체크)")
+    @PostMapping("/email/send-code-for-signup")
+    public ResponseEntity<ApiResponse<Void>> sendCodeForSignup(@RequestBody ReqEmailDto reqEmailDto) {
         String email = reqEmailDto.getEmail();
 
-        ApiResponse<Void> response = emailService.sendVerificationCode(email);
+        ApiResponse<Void> response = emailService.sendVerificationCode(email, true);
+
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
+
+    @Operation(summary = "인증용 인증번호 요청 API", description = "인증 시 인증번호 발송 요청")
+    @PostMapping("/email/send-code-for-find")
+    public ResponseEntity<ApiResponse<Void>> sendCodeForFind(@RequestBody ReqEmailDto reqEmailDto) {
+        String email = reqEmailDto.getEmail();
+
+        ApiResponse<Void> response = emailService.sendVerificationCode(email, false);
 
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }

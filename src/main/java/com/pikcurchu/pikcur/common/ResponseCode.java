@@ -6,7 +6,8 @@ public enum ResponseCode {
     MAIL_SEND_FAIL("MAIL_SEND_FAIL", "메일 전송 실패"),
     INVALID_REQUEST("INVALID_REQUEST", "잘못된 요청"),
     EXPIRATION("EXPIRATION", "만료"),
-    INCONSISTENCY("INCONSISTENCY", "불일치");
+    INCONSISTENCY("INCONSISTENCY", "불일치"),
+    NOT_FOUND("NOT_FOUND", "존재 하지 않음");
 
     private final String code;
     private final String message;
