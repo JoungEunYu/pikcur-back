@@ -1,5 +1,6 @@
 package com.pikcurchu.pikcur.controller;
 
+import com.pikcurchu.pikcur.common.ApiResponse;
 import com.pikcurchu.pikcur.dto.response.ResSigninDto;
 import com.pikcurchu.pikcur.util.JwtUtil;
 import com.pikcurchu.pikcur.service.AuthService;
@@ -42,23 +43,17 @@ public class AuthController {
     @Operation(summary = "회원가입", description = "회원가입 API")
     @PostMapping("/members/signup")
     public ResponseEntity<Integer> signup(@RequestBody Member member) { // TODO: 유지보수를 위한 DTO 변경
-        int response = authService.insertMember(member.getId()
-                , member.getPassword()
-                , member.getEmail()
-                , member.getName()
-                , member.getPhone()
-                , member.getGender()
-                , member.getBirth()); // TODO: service에서 처리하도록
+        int response = authService.insertMember(member);
 
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "아이디 조회", description = "아이디 조회 API")
     @PostMapping("/members/find-id")
-    public ResponseEntity<String> findIdByEmail(@RequestBody Member member) {
-        String response = authService.findIdByEmail(member.getEmail());
+    public ResponseEntity<ApiResponse<String>> findIdByEmail(@RequestBody Member member) {
+        ApiResponse<String> response = authService.findIdByEmail(member.getEmail());
 
-        return new ResponseEntity<String>(response, HttpStatus.OK);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
     @Operation(summary = "계정 삭제", description = "계정 삭제 API")
@@ -77,11 +72,22 @@ public class AuthController {
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
     }
 
-    @Operation(summary = "비밀번호 변경", description = "비밀번호 변경 API")
-    @PostMapping("/members/password")
-    public ResponseEntity<Integer> updatePassword(@RequestBody Member member, HttpServletRequest request) {
+    @Operation(summary = "로그인 상태에서 비밀번호 변경", description = "로그인 상태에서 비밀번호 변경 API")
+    @PostMapping("/members/password-status-login")
+    public ResponseEntity<Integer> updatePasswordStatusLogin(@RequestBody Member member, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        int response = authService.updatePassword(memberNo, member.getPassword());
+        int response = authService.updatePasswordStatusLogin(memberNo, member.getPassword());
+        if (response > 0) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @Operation(summary = "비로그인 상태에서 비밀번호 변경", description = "비로그인 상태에서 비밀번호 변경 API")
+    @PostMapping("/members/password-status-unLogin")
+    public ResponseEntity<Integer> updatePasswordStatusUnLogin(@RequestBody Member member) {
+        int response = authService.updatePasswordStatusUnLogin(member.getId(), member.getPassword());
         if (response > 0) {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {

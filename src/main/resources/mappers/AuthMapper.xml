@@ -86,12 +86,20 @@
         )
     </select>
 
-    <update id="updatePassword" parameterType="map">
+    <update id="updatePasswordStatusLogin" parameterType="map">
         UPDATE member
         SET
             password = #{password}
         ,   update_date = NOW()
         WHERE member_no = #{memberNo}
+    </update>
+
+    <update id="updatePasswordStatusUnLogin" parameterType="map">
+        UPDATE member
+        SET
+        password = #{password}
+        ,   update_date = NOW()
+        WHERE id = #{id}
     </update>
 
     <insert id="insertStore" parameterType="map">

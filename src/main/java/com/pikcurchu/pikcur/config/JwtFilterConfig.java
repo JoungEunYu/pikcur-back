@@ -20,7 +20,7 @@ public class JwtFilterConfig {
         registration.setFilter(jwtFilter);
         registration.addUrlPatterns(
                 "/auth/members/delete-account",
-                "/auth/members/password",
+                "/auth/members/password-status-login",
                 "/mypage/profile",
                 "/mypage/store",
                 "/goods/*/report",
