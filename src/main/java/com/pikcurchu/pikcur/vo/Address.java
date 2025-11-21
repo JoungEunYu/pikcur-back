@@ -14,4 +14,6 @@ public class Address {
     private String phone;
     private String address;
     private String addressDetail;
+    private String isDefault;
+    private String useYn;
 }

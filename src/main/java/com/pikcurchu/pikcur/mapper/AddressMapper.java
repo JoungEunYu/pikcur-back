@@ -20,6 +20,8 @@ public interface AddressMapper {
 
     Integer deleteAddress(Integer addressId, Integer memberNo);
 
+    Integer updateDefaultAddressAfterDelete(Integer addressId, Integer memberNo);
+
     Integer updateDefaultAddressN(Integer memberNo);
 
     Integer updateDefaultAddressY(Integer addressId, Integer memberNo);

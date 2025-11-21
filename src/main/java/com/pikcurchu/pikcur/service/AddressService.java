@@ -41,7 +41,13 @@ public class AddressService {
     }
 
     public Integer deleteAddress(int addressId, int memberNo) {
-        return addressMapper.deleteAddress(addressId, memberNo);
+        int response = 0;
+
+        response += addressMapper.deleteAddress(addressId, memberNo);
+
+        response += addressMapper.updateDefaultAddressAfterDelete(addressId, memberNo);
+
+        return response;
     }
 
     @Transactional

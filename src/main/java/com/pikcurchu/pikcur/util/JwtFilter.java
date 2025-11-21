@@ -25,13 +25,14 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            sendUnauthorizedResponse(response, "NO_TOKEN", "토큰이 존재하지 않습니다.");
             return;
         }
 
         String token = authHeader.substring(7);
+
         if (!JwtUtil.validateToken(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            sendUnauthorizedResponse(response, "EXPIRATION", "로그인 시간이 만료되었습니다.");
             return;
         }
 
@@ -39,5 +40,18 @@ public class JwtFilter extends OncePerRequestFilter {
         request.setAttribute("memberNo", memberNo);
 
         filterChain.doFilter(request, response);
+    }
+
+    private void sendUnauthorizedResponse(HttpServletResponse response, String code, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json; charset=UTF-8");
+
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+        response.getWriter().write(
+                "{ \"code\": \"" + code + "\", \"message\": \"" + message + "\" }"
+        );
+        response.getWriter().flush();
     }
 }

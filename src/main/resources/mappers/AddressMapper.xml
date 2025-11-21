@@ -42,6 +42,7 @@
             address
         where
             member_no = #{memberNo}
+        and use_yn = 'Y'
     </select>
 
     <update id="updateAddress">
@@ -57,13 +58,34 @@
         and address_id = #{req.addressId}
     </update>
 
-    <delete id="deleteAddress">
-        delete from
-        address
-        where
-        member_no = #{memberNo}
-        and address_id = #{addressId}
-    </delete>
+    <update id="deleteAddress">
+        UPDATE
+            address
+        SET
+            use_yn = 'N'
+        WHERE
+            member_no = #{memberNo}
+        AND address_id = #{addressId}
+    </update>
+
+    <update id="updateDefaultAddressAfterDelete">
+        UPDATE
+            address
+        SET
+            is_default = 'Y'
+        WHERE
+            address_id = (
+                SELECT
+                    address_id
+                FROM
+                    address
+                WHERE
+                    member_no = #{memberNo}
+                AND use_yn = 'Y'
+                ORDER BY address_id ASC
+                LIMIT 1
+            )
+    </update>
 
     <update id="updateDefaultAddressN">
         UPDATE
