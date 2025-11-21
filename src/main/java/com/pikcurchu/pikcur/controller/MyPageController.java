@@ -57,7 +57,7 @@ public class MyPageController {
 
     @Operation(summary = "내상점 수정", description = "내 상점 수정 API")
     @PutMapping("/store")
-    public ResponseEntity<Integer> updateMyStore(@RequestPart Store store,
+    public ResponseEntity<Integer> updateMyStore(@RequestPart("store") Store store,
                                                  @RequestPart(required = false) MultipartFile image) {
         Integer response = myPageService.updateMyStore(store);
         if(image != null && !image.isEmpty()) {

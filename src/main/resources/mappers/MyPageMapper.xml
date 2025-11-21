@@ -3,7 +3,7 @@
 
 <mapper namespace="com.pikcurchu.pikcur.mapper.MyPageMapper">
 
-    <select id="selectMyInfoById" parameterType="string" resultType="com.pikcurchu.pikcur.dto.response.MyPageInfoDto">
+    <select id="selectMyInfoById" parameterType="int" resultType="com.pikcurchu.pikcur.dto.response.MyPageInfoDto">
         SELECT
             name
         ,   phone
@@ -22,7 +22,6 @@
             name = #{name}
         ,   phone = #{phone}
         ,   birth = #{birth}
-        ,   email = #{email}
         ,   update_date = NOW()
         WHERE
             member_no = #{memberNo}
@@ -44,8 +43,7 @@
         UPDATE
             store
         SET
-            profile = #{profile}
-        ,   store_name = #{storeName}
+            store_name = #{storeName}
         ,   store_info = #{storeInfo}
         WHERE
             store_id = #{storeId}
