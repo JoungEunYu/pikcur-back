@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface AlarmMapper {
 
-    List<ResAlarmDto> selectAlarmList(Integer MemberNo);
+    List<ResAlarmDto> selectAlarmList(Integer memberNo);
 
-    //알람 추가 쿼리
-    void insertAlarm(Integer memberNo, String alarmTitle, String alarmContent);
+    void insertAlarm(Integer memberNo, String alarmTitle, String alarmContent, String imagePath);
 }

@@ -22,12 +22,13 @@
     </insert>
 
     <select id="selectAddressIsDefault" resultType="int">
-        select
+        SELECT
             count(*)
-        from
+        FROM
             address
-        where
+        WHERE
             member_no = #{memberNo}
+        AND use_yn = 'Y'
     </select>
 
     <select id="selectAddressList" resultType="com.pikcurchu.pikcur.vo.Address">
@@ -63,6 +64,7 @@
             address
         SET
             use_yn = 'N'
+        ,   is_default = 'N'
         WHERE
             member_no = #{memberNo}
         AND address_id = #{addressId}

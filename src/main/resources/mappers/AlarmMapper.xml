@@ -12,9 +12,22 @@
             member_no = #{memberNo}
         and status_no = '01'
     </select>
-    <insert id="insertAlarm">
-        insert into
-        alarm(member_no, alarm_title, alarm_content)
-        values(#{memberNo}, #{alarmTitle} #{alarmTitle})
+
+    <insert id="insertAlarm" parameterType="map">
+        INSERT INTO
+            alarm
+        (
+            member_no
+        ,   alarm_title
+        ,   alarm_content
+        ,   image_path
+        )
+        VALUES
+        (
+            #{memberNo}
+        ,   #{alarmTitle}
+        ,   #{alarmContent}
+        ,   null
+        )
     </insert>
 </mapper>
