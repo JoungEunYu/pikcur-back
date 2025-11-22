@@ -32,6 +32,14 @@ public class StoreController {
         return new ResponseEntity<>(store, HttpStatus.OK);
     }
 
+    @Operation(summary = "로그인 회원의 상점 정보 조회", description = "회원 번호를 통해 상점 정보를 조회")
+    @GetMapping("/my-store")
+    public ResponseEntity<ResStoreDetailDto> selectMyStoreInfo(HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        ResStoreDetailDto store = storeService.selectMyStoreInfo(memberNo);
+        return new ResponseEntity<>(store, HttpStatus.OK);
+    }
+
     @Operation(summary = "리뷰 리스트 조회", description = "상점 아이디를 통해 상점 리뷰 리스트를 조회")
     @GetMapping("/reviews/{storeId}")
     public ResponseEntity<ResReviewPageDto> selectStoreReviews(@PathVariable Integer storeId, @RequestParam int currentPage) {
@@ -44,7 +52,6 @@ public class StoreController {
     public ResponseEntity<ResGoodsPageDto> selectStoreGoods(@PathVariable Integer storeId, HttpServletRequest request, @RequestParam int currentPage) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
         ResGoodsPageDto goodsList = storeService.selectStoreGoods(storeId, memberNo, currentPage);
-        System.out.println(goodsList);
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
@@ -66,6 +73,13 @@ public class StoreController {
     @GetMapping("/{storeId}/bids")
     public ResponseEntity<ResBidsPageDto> selectStoreBids(@PathVariable Integer storeId, @RequestParam int currentPage) {
         ResBidsPageDto bidsPageDto = storeService.selectStoreBids(storeId, currentPage);
+        return new ResponseEntity<>(bidsPageDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "낙찰 내역 리스트 조회", description = "낙찰한 리스트를 조회")
+    @GetMapping("/{storeId}/win-bids")
+    public ResponseEntity<ResBidsPageDto> selectStoreWinBids(@PathVariable Integer storeId, @RequestParam int currentPage) {
+        ResBidsPageDto bidsPageDto = storeService.selectStoreWinBids(storeId, currentPage);
         return new ResponseEntity<>(bidsPageDto, HttpStatus.OK);
     }
 
@@ -105,18 +119,18 @@ public class StoreController {
     }
 
     @Operation(summary = "상점 신고", description = "상점 번호를 통해 해당 상점 신고")
-    @PostMapping("/{storeId}/report")
-    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreReportDto reqStoreReportDto, HttpServletRequest request) {
+    @PostMapping("/report/{storeId}")
+    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        storeService.reportStore(storeId, reqStoreReportDto, memberNo);
+        storeService.reportStore(storeId, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "상점 차단", description = "상점 번호를 통해 해당 상점 차단")
-    @PostMapping("/{storeId}/block")
-    public ResponseEntity<Void> reportStore(@PathVariable Integer storeId, @RequestBody ReqStoreBlockDto reqStoreBlockDto, HttpServletRequest request) {
+    @PostMapping("/block/{storeId}")
+    public ResponseEntity<Void> reportBlock(@PathVariable Integer storeId, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
-        storeService.blockStore(storeId, reqStoreBlockDto, memberNo);
+        storeService.blockStore(storeId, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -129,9 +143,10 @@ public class StoreController {
     }
 
     @Operation(summary = "팔로우 삭제", description = "팔로우 삭제")
-    @DeleteMapping("/follow/{followId}")
-    public ResponseEntity<Integer> deleteFollow(@PathVariable Integer followId) {
-        Integer response = storeService.deleteFollow(followId);
+    @DeleteMapping("/follow/{storeId}")
+    public ResponseEntity<Integer> deleteFollow(@PathVariable Integer storeId, HttpServletRequest request) {
+        Integer memberNo = (Integer) request.getAttribute("memberNo");
+        Integer response = storeService.deleteFollow(storeId,memberNo);
         return new ResponseEntity<Integer>(response, HttpStatus.OK);
     }
 }

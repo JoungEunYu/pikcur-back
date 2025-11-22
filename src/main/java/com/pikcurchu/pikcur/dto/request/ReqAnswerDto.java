@@ -13,5 +13,4 @@ public class ReqAnswerDto {
     private Integer memberNo;
     private String title;
     private String content;
-    private String imagePath;
 }

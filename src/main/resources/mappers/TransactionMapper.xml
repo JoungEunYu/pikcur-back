@@ -13,6 +13,7 @@
           g.goods_name,
           i.image_path as goods_image,
 
+          st.store_id,
           st.store_name,
           seller.phone AS seller_phone,
 
@@ -78,6 +79,7 @@
         <result property="goodsImage" column="goods_image" />
 
         <association property="sellerInfo" javaType="com.pikcurchu.pikcur.dto.response.SellerInfo">
+            <result property="storeId" column="store_id"/>
             <result property="storeName" column="store_name"/>
             <result property="phone" column="seller_phone"/>
         </association>

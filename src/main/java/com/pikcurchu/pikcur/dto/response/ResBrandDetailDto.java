@@ -11,4 +11,5 @@ public class ResBrandDetailDto {
     private String brandProfile;
     private String brandInfo;
     private boolean isLiked;
+    private Integer goodsCount;
 }

@@ -25,26 +25,20 @@ public class PaymentService {
     @Transactional
     public boolean verifyPayment(ReqVerifyPaymentDto dto, Integer memberNo) {
         try {
-            // A. 아임포트 API에 '진짜' 결제 정보 요청 (서버 to 서버)
+            // 아임포트 API에 '진짜' 결제 정보 요청 (서버 to 서버)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(dto.getImpUid());
 
-            // B. 아임포트에서 가져온 '실제 결제 금액'
+            // 아임포트에서 가져온 '실제 결제 금액'
             BigDecimal paidAmountFromIamport = iamportResponse.getResponse().getAmount();
 
-            // C. 프론트에서 보낸 '결제 요청 금액' (DB에서 가져오는 것을 더 추천합니다)
+            // 프론트에서 보낸 '결제 요청 금액'
             BigDecimal paidAmountFromDto = dto.getAmount(); // 또는 long/int
 
-            // D. 금액 위/변조 검증 (핵심!)
-            // 주의: int/long 비교 대신 BigDecimal의 compareTo 사용
+            // 금액 위/변조 검증
             if (paidAmountFromIamport.compareTo(paidAmountFromDto) != 0) {
-                // 금액이 일치하지 않음 -> 위/변조 시도 또는 오류
-                // (나중에 여기도 '강제 환불' 로직을 넣어야 합니다)
                 return false;
             }
 
-            // 검증 성공! 이제 DB 작업
-
-            // 1. 상품(Goods) 상태 변경
             // TODO: integer로 결과 확인 하도록 수정
             goodsMapper.updateGoodsStatus("03", dto.getGoodsId());
             Integer sellerNo = goodsMapper.selectGoodsMemberNo(dto.getGoodsId());
