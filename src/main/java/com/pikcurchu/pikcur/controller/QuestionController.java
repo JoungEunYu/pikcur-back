@@ -35,9 +35,9 @@ public class QuestionController {
     }
 
     @Operation(summary = "답변 등록", description = "답변 객체를 받아 등록")
-    @PostMapping("/{questionId}/answer")
+    @PostMapping("/answer/{questionId}")
     public ResponseEntity<Void> insertAnswer(@PathVariable Integer questionId,
-                                             @RequestPart ReqAnswerDto answerDto,
+                                             @RequestPart("answerData") ReqAnswerDto answerDto,
                                              @RequestPart(required = false) MultipartFile image,
                                              HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");

@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResReviewItemDto {
-    private String memberName;
+    private String src;
+    private String storeName;
     private float rating;
     private String content;
     private LocalDateTime createDate;

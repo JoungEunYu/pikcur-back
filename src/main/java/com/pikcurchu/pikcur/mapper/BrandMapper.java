@@ -18,4 +18,6 @@ public interface BrandMapper {
     void deleteBrandLike(Integer brandId, Integer memberNo);
 
     int countBrandGoodsByBrandId(Integer brandId);
+
+    Integer selectBrandGoodsCount(Integer brandId);
 }

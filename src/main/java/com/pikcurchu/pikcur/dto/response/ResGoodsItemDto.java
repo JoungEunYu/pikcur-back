@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResGoodsItemDto {
+    private String imagePath;
     private Integer goodsId;
     private Integer categoryId;
     private Integer brandId;
@@ -18,8 +19,10 @@ public class ResGoodsItemDto {
     private Integer startPrice;
     private LocalDateTime auctionEndDate;
     private LocalDateTime createDate;
+    private Integer bidPrice;
     private Integer bidCount;
     private boolean isLiked;
-    private String statusName;
+    private String gender;
+    private String statusNo;
 
 }

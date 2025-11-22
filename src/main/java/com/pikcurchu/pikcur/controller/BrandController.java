@@ -36,14 +36,14 @@ public class BrandController {
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 찜", description = "상품 번호를 통해 해당 상품 찜")
+    @Operation(summary = "브랜드 찜", description = "상품 번호를 통해 해당 상품 찜")
     @PostMapping("/{brandId}/like")
     public ResponseEntity<Void> insertBrandLike(@PathVariable Integer brandId, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
         brandService.insertBrandLike(brandId, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @Operation(summary = "상품 찜 취소", description = "상품 번호를 통해 해당 상품 찜 취소")
+    @Operation(summary = "브랜드 찜 취소", description = "상품 번호를 통해 해당 상품 찜 취소")
     @DeleteMapping("/{brandId}/like")
     public ResponseEntity<Void> deleteBrandLike(@PathVariable Integer brandId, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");

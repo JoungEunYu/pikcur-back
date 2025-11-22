@@ -23,12 +23,16 @@ public class JwtFilterConfig {
                 "/auth/members/password-status-login",
                 "/mypage/profile",
                 "/mypage/store",
-                "/goods/*/report",
-                "/goods/*/like",
+                "/store/*",
+                "/store/my-store",
+                "/goods/report/*",
+                "/goods/like/*",
                 "/goods",
                 "/brand/*/like",
                 "/bid/*/**",
-                "/question/*/**",
+                "/bid/*",
+                "/question",
+                "/question/answer/*",
                 "/review/*",
                 "/transactions/*/**",
                 "/mypage/address",
@@ -38,6 +42,8 @@ public class JwtFilterConfig {
                 "/mypage/blocked-stores",
                 "/mypage/blocked-stores/*",
                 "/store/follow/*",
+                "/store/block/*",
+                "/store/report/*",
                 "/alarm"
         );
         registration.setOrder(1);
@@ -54,7 +60,8 @@ public class JwtFilterConfig {
                 "/brand/*",
                 "/brand/*/goods",
                 "/search/recent",
-                "/search/goods");
+                "/search/goods",
+                "/store/goods/*");
         registration.setOrder(2);
         return registration;
     }

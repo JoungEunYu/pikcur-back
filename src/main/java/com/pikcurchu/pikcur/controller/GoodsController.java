@@ -77,7 +77,7 @@ public class GoodsController {
     }
 
     @Operation(summary = "상품 신고", description = "상품 번호를 통해 해당 상품 신고")
-    @PostMapping("/{goodsId}/report")
+    @PostMapping("/report/{goodsId}")
     public ResponseEntity<Void> reportGoods(@PathVariable Integer goodsId, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
         goodsService.reportGoods(goodsId, memberNo);
@@ -85,14 +85,14 @@ public class GoodsController {
     }
 
     @Operation(summary = "상품 찜", description = "상품 번호를 통해 해당 상품 찜")
-    @PostMapping("/{goodsId}/like")
+    @PostMapping("/like/{goodsId}")
     public ResponseEntity<Void> goodsLike(@PathVariable Integer goodsId, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
         goodsService.insertGoodsLike(goodsId, memberNo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @Operation(summary = "상품 찜 취소", description = "상품 번호를 통해 해당 상품 찜 취소")
-    @DeleteMapping("/{goodsId}/like")
+    @DeleteMapping("/like/{goodsId}")
     public ResponseEntity<Void> deleteGoodsLike(@PathVariable Integer goodsId, HttpServletRequest request) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
         goodsService.deleteGoodsLike(goodsId, memberNo);

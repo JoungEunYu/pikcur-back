@@ -15,6 +15,8 @@ public interface StoreMapper {
 
     List<ResReviewItemDto> findStoreReviewById(Map<String, Object> params);
 
+    ResStoreAverageDto findStoreReviewRatingAverage(Integer storeId);
+
     List<ResGoodsItemDto> findStoreGoodsById(Map<String, Object> params);
 
     List<ResTransactionItemDto> findStoreSellTranactionById(Map<String, Object> params);
@@ -33,9 +35,9 @@ public interface StoreMapper {
 
     List<ResQuestionItemDto> selectSentQuestions(Map<String, Object> params);
 
-    void insertStoreReport(ReqStoreReportDto reqStoreReportDto);
+    void insertStoreReport(Integer storeId, Integer memberNo);
 
-    void insertStoreBlock(ReqStoreBlockDto reqStoreBlockDto);
+    void insertStoreBlock(Integer storeId, Integer memberNo);
 
     int countReceivedQuestionsByStoreId(Integer storeId);
 
@@ -59,5 +61,11 @@ public interface StoreMapper {
 
     Integer insertFollow(Integer storeId, Integer memberNo);
 
-    Integer deleteFollow(Integer followId);
+    Integer deleteFollow(Integer storeId, Integer memberNo);
+
+    ResStoreDetailDto findMyStoreInfoById(Integer memberNo);
+
+    List<ResBidItemDto> findWinBidById(Map<String, Object> params);
+
+    int countWinBidsByStoreId(Integer storeId);
 }

@@ -10,8 +10,8 @@
         update question set image = #{uploadedPath} where question_id = #{questionId}
     </update>
     <insert id="insertAnswer" useGeneratedKeys="true" keyProperty="answerId" parameterType="com.pikcurchu.pikcur.dto.request.ReqAnswerDto">
-        insert into answer(question_id, member_no, title, content, image)
-        values (#{questionId}, #{memberNo}, #{title}, #{content}, #{imagePath})
+        insert into answer(question_id, member_no, title, content)
+        values (#{questionId}, #{memberNo}, #{title}, #{content})
     </insert>
     <update id="updateAnswerImagePath">
         update answer set image = #{uploadedPath} where answer_id = #{answerId}

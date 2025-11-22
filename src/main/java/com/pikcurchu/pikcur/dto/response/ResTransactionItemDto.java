@@ -14,9 +14,11 @@ import java.time.LocalDateTime;
 public class ResTransactionItemDto {
     private Integer transactionId;
     private Integer buyerNo;
+    private Integer sellerNo;
     private Integer goodsId;
     private String goodsName;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String statusName;
+    private Integer price;
 }
