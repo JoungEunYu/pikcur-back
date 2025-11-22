@@ -33,17 +33,18 @@ public class StoreController {
     }
 
     @Operation(summary = "리뷰 리스트 조회", description = "상점 아이디를 통해 상점 리뷰 리스트를 조회")
-    @GetMapping("/{storeId}/reviews")
+    @GetMapping("/reviews/{storeId}")
     public ResponseEntity<ResReviewPageDto> selectStoreReviews(@PathVariable Integer storeId, @RequestParam int currentPage) {
         ResReviewPageDto reviewPageDto = storeService.selectStoreReview(storeId, currentPage);
         return new ResponseEntity<>(reviewPageDto, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 리스트 조회", description = "상점 아이디를 통해 상품 리스트를 조회")
-    @GetMapping("/{storeId}/goods")
+    @GetMapping("/goods/{storeId}")
     public ResponseEntity<ResGoodsPageDto> selectStoreGoods(@PathVariable Integer storeId, HttpServletRequest request, @RequestParam int currentPage) {
         Integer memberNo = (Integer) request.getAttribute("memberNo");
         ResGoodsPageDto goodsList = storeService.selectStoreGoods(storeId, memberNo, currentPage);
+        System.out.println(goodsList);
         return new ResponseEntity<>(goodsList, HttpStatus.OK);
     }
 
