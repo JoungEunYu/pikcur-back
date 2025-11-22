@@ -1,6 +1,7 @@
 package com.pikcurchu.pikcur.controller;
 
 
+import com.pikcurchu.pikcur.anotation.Alarm;
 import com.pikcurchu.pikcur.dto.request.ReqAddressDto;
 import com.pikcurchu.pikcur.service.AddressService;
 import com.pikcurchu.pikcur.vo.Address;
@@ -23,6 +24,7 @@ public class AddressController {
         this.addressService = addressService;
     }
 
+    @Alarm(alarmTitle = "배송지 추가 완료", alarmContent = "새 배송지가 등록되었습니다.")
     @Operation(summary = "배송지 추가", description = "배송지 추가 API")
     @PostMapping("/address")
     public ResponseEntity<Integer> insertAddress(@RequestBody ReqAddressDto req, HttpServletRequest request) {

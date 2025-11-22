@@ -21,25 +21,27 @@
     </insert>
 
     <select id="selectAccountIsDefault" resultType="int">
-        select
+        SELECT
             count(*)
-        from
+        FROM
             account
-        where
+        WHERE
             member_no = #{memberNo}
+        AND use_yn = 'Y'
     </select>
 
     <select id="selectAccountList" resultType="com.pikcurchu.pikcur.vo.Account">
-        select
+        SELECT
             account_id
         ,   bank
         ,   account_number
         ,   name
         ,   is_default
-        from
+        FROM
             account
-        where
+        WHERE
             member_no = #{memberNo}
+        and use_yn = 'Y'
     </select>
 
     <update id="updateAccount">
@@ -54,13 +56,35 @@
             and account_id = #{req.accountId}
     </update>
 
-    <delete id="deleteAccount">
-        delete from
+    <update id="deleteAccount">
+        UPDATE
             account
-        where
+        SET
+            use_yn = 'N'
+        ,   is_default = 'N'
+        WHERE
             member_no = #{memberNo}
-        and account_id = #{accountId}
-    </delete>
+        AND account_id = #{accountId}
+    </update>
+
+    <update id="updateDefaultAccountAfterDelete">
+        UPDATE
+            account
+        SET
+            is_default = 'Y'
+        WHERE
+            account_id = (
+                SELECT
+                    account_id
+                FROM
+                    account
+                WHERE
+                    member_no = #{memberNo}
+                AND use_yn = 'Y'
+                ORDER BY account_id ASC
+                LIMIT 1
+            )
+    </update>
 
     <update id="updateDefaultAccountN">
         UPDATE

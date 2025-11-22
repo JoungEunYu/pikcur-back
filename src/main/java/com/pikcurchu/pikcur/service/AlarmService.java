@@ -18,4 +18,7 @@ public class AlarmService {
         return alarmMapper.selectAlarmList(memberNo);
     }
 
+    public void insertAlarm(Integer memberNo, String alarmTitle, String alarmContent, String imagePath) {
+        alarmMapper.insertAlarm(memberNo, alarmTitle, alarmContent, imagePath);
+    }
 }

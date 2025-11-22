@@ -18,6 +18,8 @@ public interface AccountMapper {
 
     Integer deleteAccount(Integer accountId, Integer memberNo);
 
+    Integer updateDefaultAccountAfterDelete(Integer accountId, Integer memberNo);
+
     Integer updateDefaultAccountN(Integer memberNo);
     Integer updateDefaultAccountY(Integer accountId, Integer memberNo);
 }

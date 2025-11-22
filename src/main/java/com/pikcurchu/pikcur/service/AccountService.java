@@ -40,7 +40,13 @@ public class AccountService {
     }
 
     public Integer deleteAccount(Integer accountId, Integer memberNo) {
-        return accountMapper.deleteAccount(accountId, memberNo);
+        int response = 0;
+
+        response += accountMapper.deleteAccount(accountId, memberNo);
+
+        response += accountMapper.updateDefaultAccountAfterDelete(accountId, memberNo);
+
+        return response;
     }
 
     @Transactional
