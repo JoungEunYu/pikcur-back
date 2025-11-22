@@ -18,7 +18,9 @@ public class BrandService {
     private static final int PAGE_SIZE_21 = 21;
 
     public ResBrandDetailDto selectBrandDetail(Integer brandId, Integer memberNo) {
-        return brandMapper.selectBrandDetail(brandId, memberNo);
+        ResBrandDetailDto brandDetailDto = brandMapper.selectBrandDetail(brandId, memberNo);
+        brandDetailDto.setGoodsCount(brandMapper.selectBrandGoodsCount(brandId));
+        return brandDetailDto;
     }
 
     public ResGoodsPageDto selectBrandGoodsList(Integer brandId, Integer memberNo, int currentPage) {

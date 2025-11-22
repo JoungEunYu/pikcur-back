@@ -38,25 +38,66 @@
         GROUP BY
         s.store_id
     </select>
+    <select id="findMyStoreInfoById" resultType="com.pikcurchu.pikcur.dto.response.ResStoreDetailDto">
+        SELECT
+        s.store_id,
+        s.profile,
+        s.store_name,
+        s.store_info,
+        IFNULL(AVG(r.rating), 0.0) AS rating,
+        COUNT(DISTINCT r.review_id) AS reviewCount,
+        COUNT(DISTINCT f_all.follow_id) AS followerCount,
+        CASE
+        WHEN f_user.follow_id IS NOT NULL THEN true
+        ELSE false
+        END AS isFollow
+
+        FROM
+        store s
+
+        LEFT JOIN
+        review r ON s.store_id = r.store_id
+
+        LEFT JOIN
+        follow f_all ON s.store_id = f_all.store_id
+
+        LEFT JOIN
+        follow f_user ON s.store_id = f_user.store_id
+        AND f_user.member_no = #{currentMemberNo}
+
+        WHERE
+        s.member_no = #{memberNo}
+
+        GROUP BY
+        s.store_id
+    </select>
     <select id="findStoreReviewById" resultType="com.pikcurchu.pikcur.dto.response.ResReviewItemDto">
         SELECT
-        s.profile as src,
-        m.name as memberName,
+        s.profile AS src,
+        s.store_name,
         r.rating,
         r.content,
         r.create_date,
-        GROUP_CONCAT(RC.content SEPARATOR ',') AS reviewChoices
-        from review r
-        join
-            member m on r.member_no = m.member_no
-        join store s on s.member_no = m.member_no
-        left join
-            review_choice_map rm on r.review_id = rm.review_id
-        left join
-            review_choice rc on rc.review_choice_id = rm.review_choice_id
-        where r.store_id = #{storeId}
-        group by r.review_id
-        order by r.create_date desc
+        rcm.choice_content as reviewChoices
+        FROM
+        review r
+        JOIN
+        member m ON r.member_no = m.member_no
+        JOIN
+        store s ON s.member_no = m.member_no
+        LEFT JOIN (
+        SELECT
+        rm.review_id,
+        GROUP_CONCAT(rc.content SEPARATOR ',') AS choice_content
+        FROM
+        review_choice_map rm
+        JOIN
+        review_choice rc ON rc.review_choice_id = rm.review_choice_id
+        GROUP BY
+        rm.review_id
+        ) rcm
+        ON r.review_id = rcm.review_id
+        WHERE r.store_id = #{storeId}
         LIMIT #{limit} OFFSET #{offset};
     </select>
     <select id="findStoreReviewRatingAverage" resultType="com.pikcurchu.pikcur.dto.response.ResStoreAverageDto">
@@ -116,6 +157,8 @@
         t.goods_id,
         g.goods_name,
         t.buyer_no,
+        t.seller_no,
+        t.price,
         t.start_date,
         t.end_date,
         sm.status_name
@@ -137,6 +180,8 @@
         t.goods_id,
         g.goods_name,
         t.buyer_no,
+        t.seller_no,
+        t.price,
         t.start_date,
         t.end_date,
         sm.status_name
@@ -169,6 +214,28 @@
         store s ON s.member_no = b.member_no
         where
         b.member_no = (SELECT member_no FROM store where store_id = #{storeId})
+        order by b.create_date desc
+        LIMIT #{limit} OFFSET #{offset};
+    </select>
+    <select id="findWinBidById" resultType="com.pikcurchu.pikcur.dto.response.ResBidItemDto">
+        select
+        b.bid_id,
+        g.goods_name,
+        b.bid_price,
+        sm.status_name,
+        b.create_date
+        from bid b
+        join
+        goods g ON g.goods_id = b.goods_id
+        join
+        status_master sm ON sm.status_type = b.status_type
+        AND sm.status_no = b.status_no
+        join
+        store s ON s.member_no = b.member_no
+        where
+        b.member_no = (SELECT member_no FROM store where store_id = #{storeId})
+        and
+        b.status_no = '03'
         order by b.create_date desc
         LIMIT #{limit} OFFSET #{offset};
     </select>
@@ -361,6 +428,13 @@
         from goods_like gl
         where gl.member_no = (SELECT member_no FROM store where store_id = #{storeId});
     </select>
+    <select id="countWinBidsByStoreId" resultType="int"
+            parameterType="int">
+        select count(*)
+        from bid b
+        where member_no = (SELECT member_no FROM store where store_id = #{storeId})
+        and b.status_no = '03';
+    </select>
     <insert id="insertStoreReport" parameterType="com.pikcurchu.pikcur.dto.request.ReqStoreReportDto">
         insert into store_report(store_id, member_no)
         values(#{storeId}, #{memberNo});
@@ -386,6 +460,6 @@
         DELETE FROM
             follow
         where
-            follow_id = #{followId}
+            member_no = #{memberNo} and store_id = #{storeId}
     </delete>
 </mapper>

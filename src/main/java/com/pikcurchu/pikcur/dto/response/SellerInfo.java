@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SellerInfo {
+    private Integer storeId;
     private String storeName;
     private String phone;
 }

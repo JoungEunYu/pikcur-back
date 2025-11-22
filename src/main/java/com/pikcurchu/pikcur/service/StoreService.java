@@ -133,6 +133,26 @@ public class StoreService {
         return new ResBidsPageDto(bidList, totalPages, totalCount);
     }
 
+    public ResBidsPageDto selectStoreWinBids(Integer storeId, int currentPage) {
+        int offset = (currentPage - 1) * PAGE_SIZE_6;
+
+        // 2. 맵퍼에 파라미터 전달
+        Map<String, Object> params = new HashMap<>();
+        params.put("storeId", storeId);
+        params.put("limit", PAGE_SIZE_6);
+        params.put("offset", offset);
+
+        // 3. 쿼리 2개 호출
+        List<ResBidItemDto> winBidList = storeMapper.findWinBidById(params);
+        int totalCount = storeMapper.countWinBidsByStoreId(storeId);
+
+        // 4. 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE_6);
+
+        // 5. 결과를 DTO에 담아 반환 (React가 필요한 모든 정보)
+        return new ResBidsPageDto(winBidList, totalPages, totalCount);
+    }
+
     public ResGoodsPageDto selectGoodsLike(Integer storeId, int currentPage) {
         int offset = (currentPage - 1) * PAGE_SIZE_21;
 
@@ -235,23 +255,28 @@ public class StoreService {
         return new ResQuestionPageDto(qnaList, totalPages, totalCount);
     }
 
-    public void reportStore(Integer storeId, ReqStoreReportDto reqStoreReportDto, Integer memberNo) {
-        reqStoreReportDto.setStoreId(storeId);
-        reqStoreReportDto.setMemberNo(memberNo);
-        storeMapper.insertStoreReport(reqStoreReportDto);
+    public void reportStore(Integer storeId, Integer memberNo) {
+        storeMapper.insertStoreReport(storeId, memberNo);
     }
 
-    public void blockStore(Integer storeId, ReqStoreBlockDto reqStoreBlockDto, Integer memberNo) {
-        reqStoreBlockDto.setStoreId(storeId);
-        reqStoreBlockDto.setMemberNo(memberNo);
-        storeMapper.insertStoreBlock(reqStoreBlockDto);
+    public void blockStore(Integer storeId, Integer memberNo) {
+        storeMapper.insertStoreBlock(storeId, memberNo);
     }
 
     public Integer insertFollow(Integer storeId, Integer memberNo) {
         return storeMapper.insertFollow(storeId, memberNo);
     }
 
-    public Integer deleteFollow(Integer followId) {
-        return storeMapper.deleteFollow(followId);
+    public Integer deleteFollow(Integer storeId, Integer memberNo) {
+        return storeMapper.deleteFollow(storeId, memberNo);
     }
+
+    public ResStoreDetailDto selectMyStoreInfo(Integer memberNo) {
+        ResStoreDetailDto storeDto = storeMapper.findMyStoreInfoById(memberNo);
+
+        if (storeDto == null) {throw new IllegalArgumentException("Invalid member no: " + memberNo); }
+
+        return storeDto;
+    }
+
 }

@@ -11,5 +11,5 @@ public class ResBrandItemDto {
     private Integer brandId;
     private String brandName;
     private String brandProfile;
-    private boolean isLike;
+    private boolean isLiked;
 }

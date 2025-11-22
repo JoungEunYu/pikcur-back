@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ResReviewItemDto {
     private String src;
-    private String memberName;
+    private String storeName;
     private float rating;
     private String content;
     private LocalDateTime createDate;
